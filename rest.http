@@ -1,0 +1,32 @@
+
+
+
+POST http://localhost/sample-api/sample-api.php?name=jake HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "jake"
+}
+
+
+###
+
+
+POST http://localhost/sample-api/sample-api.php?name=jake HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+name=foo
+
+
+###
+
+
+GET http://localhost/sample-api/sample-api.php?name=jake HTTP/1.1
+
+
+###
+
+POST /sample-api/sample-api.php HTTP/1.1
+HOST: localhost
+content-type: application/x-www-form-urlencoded
+content-length: 9
+name=jake
