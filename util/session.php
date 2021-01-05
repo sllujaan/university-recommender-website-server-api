@@ -21,9 +21,44 @@ function createNewSession($userID) {
 
 
 function clearSession($session_id) {
-    unset($_SESSION[$session_id]);
     unset($_SESSION[$_SESSION[$session_id] . "_created"]);
+    unset($_SESSION[$session_id]);
 }
+
+
+
+function validateSession() {
+    $requestData = getRequestData();
+    $session_id = $requestData["session_id"];
+    $user_id = $requestData["user_id"];
+
+    if(!is_string($session_id) || !is_string($user_id)) {
+        sendResponseStatus(400);    //400 bad request
+        exit();
+    }
+
+    //check if no session exists for the user
+    if(empty($_SESSION[$session_id])) {
+        sendResponseStatus(401);    //401 unauthorized
+        exit();
+    }
+
+    //check if session id is valid
+    if($_SESSION[$session_id] !== $user_id) {
+        clearSession($session_id);
+        sendResponseStatus(401);    //401 unauthorized
+        exit();
+    }
+
+    //check if session expired
+    if((time() - $_SESSION[$session_id . "_created"]) > 10) {
+        clearSession($session_id);
+        sendResponseStatus(408);    //408 request timeout
+        exit();
+    }
+    
+}
+
 
 
 
