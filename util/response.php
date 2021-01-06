@@ -12,6 +12,10 @@ function getMessage($statusCode) {
     switch ($statusCode) {
         case 400:
             return prepareMsg("Bad Request", "You don't have permission to access this resource.");
+        case 401:
+            return prepareMsg("Unauthorized", "You don't have permission to access this resource.");
+        case 408:
+            return prepareMsg("Request Timeout", "You don't have permission to access this resource.");
         default:
             return "";
             break;

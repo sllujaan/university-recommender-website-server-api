@@ -11,7 +11,7 @@ function createNewSession($userID) {
     $client = array("session_id"=> null, "user_id"=> null);
 
     $client["session_id"] = md5(uniqid(rand(), true));
-    $client["user_id"] = hash('md5', $userID);
+    $client["user_id"] = $userID;//hash('md5', $userID);
 
     $_SESSION[$client["session_id"]] = $client["user_id"];
     $_SESSION[$client["session_id"] . "_created"] = time();
@@ -32,7 +32,7 @@ function validateSession() {
     $session_id = $requestData["session_id"];
     $user_id = $requestData["user_id"];
 
-    if(!is_string($session_id) || !is_string($user_id)) {
+    if(!is_string($session_id) || !is_integer($user_id)) {
         sendResponseStatus(400);    //400 bad request
         exit();
     }
