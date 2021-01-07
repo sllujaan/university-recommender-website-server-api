@@ -4,31 +4,37 @@
     include_once("connection.php");
     include_once("../util/response.php");
 
+
+    function verifyPassword($result, $password) {
+        while ($row = $result->fetch_assoc()) {
+            if(!password_verify($password, $row["Password"])) {
+                sendResponseStatus(401);
+                exit();
+            }
+        }
+    }
+
     function verifyUser($name, $password) {
         $conn = initConnection(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE);
         
-        $stmt = $conn->prepare("SELECT * FROM user WHERE Name = ? AND Password = ?");
-        $stmt->bind_param("ss", $pName, $pPassword);
+        $stmt = $conn->prepare("SELECT User_ID, Password FROM user WHERE Name = ?");
+        $stmt->bind_param("s", $pName);
 
         // set parameters and execute
         $pName = $name;
-        $pPassword = $password;
         $stmt->execute();
-
         $result = $stmt->get_result();
 
-        if($result->num_rows !== 1) { //if user found there should be only one row
+        //if user found there should be only one row
+        if($result->num_rows !== 1) { 
             sendResponseStatus(401);
             exit();
         }
-        else {
-            while ($row = $result->fetch_assoc()) {
-                echo "<br>name: ". $row["Name"] . "<br>";
-            }
-        }
         
+        //verify password
+        verifyPassword($result, $password);
 
-
+        //close the connection
         $conn->close();
 
     }
