@@ -1,4 +1,5 @@
 <?php
+namespace VALIDATOR;
 include_once("../util/util.php");
 include_once("../util/response.php");
 

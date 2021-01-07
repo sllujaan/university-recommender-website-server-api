@@ -5,11 +5,11 @@ include_once("../util/session.php");
 include_once("../DB/validator.php");
 
 
-validatePostRequest();
+VALIDATOR\validatePostRequest();
 
-validateLoginParams();
+VALIDATOR\validateLoginParams();
 
-verifyUser($_POST["name"], $_POST["password"]);
+$userId = DATABASE_VALIDATOR\verifyUser($_POST["name"], $_POST["password"]);
 
 echo createNewSession(1);
 
