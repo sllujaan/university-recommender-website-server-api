@@ -9,6 +9,8 @@ validatePostRequest();
 
 validateLoginParams();
 
+verifyUser($_POST["name"], $_POST["password"]);
+
 echo createNewSession(1);
 
 

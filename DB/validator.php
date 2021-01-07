@@ -1,24 +1,50 @@
 <?php
     include_once("credential.php");
     include_once("connection.php");
+    include_once("../util/response.php");
 
+    
+    function verifyUser($name, $password) {
+        $conn = initConnection(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE);
+        
+        $stmt = $conn->prepare("SELECT * FROM role WHERE Name = ?");
+        $stmt->bind_param("s", $pName);
 
-    $conn = initConnection(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE);
-    $sql = "select * from role";
+        // set parameters and execute
+        $pName = $name;
+        $stmt->execute();
 
-    $result = $conn->query($sql);
+        $result = $stmt->get_result();
 
-    if($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            echo "<br>name: ". $row["Name"] . "<br>";
+        if($result->num_rows !== 1) { //if user found there should be only one row
+            
         }
+        else {
+            while ($row = $result->fetch_assoc()) {
+                echo "<br>name: ". $row["Name"] . "<br>";
+            }
+        }
+        
+
+
+        $conn->close();
+
     }
-    else {
-        echo "0 results";
-    }
 
 
 
-    $conn->close();
+    // $sql = "select * from role";
+
+    // $result = $conn->query($sql);
+
+    // if($result->num_rows > 0) {
+    //     while($row = $result->fetch_assoc()) {
+    //         echo "<br>name: ". $row["Name"] . "<br>";
+    //     }
+    // }
+    // else {
+    //     echo "0 results";
+    // }
+
 
 ?>
