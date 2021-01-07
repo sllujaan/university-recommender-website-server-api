@@ -11,7 +11,7 @@ function createNewSession($userID) {
     $client = array("session_id"=> null, "user_id"=> null);
 
     $client["session_id"] = md5(uniqid(rand(), true));
-    $client["user_id"] = $userID;//hash('md5', $userID);
+    $client["user_id"] = $userID;
 
     $_SESSION[$client["session_id"]] = $client["user_id"];
     $_SESSION[$client["session_id"] . "_created"] = time();

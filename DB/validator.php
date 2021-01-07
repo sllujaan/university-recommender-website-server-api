@@ -5,13 +5,14 @@
     include_once("../util/response.php");
 
 
+    //make sure there is only one sql row in result
     function verifyPassword($result, $password) {
-        while ($row = $result->fetch_assoc()) {
-            if(!password_verify($password, $row["Password"])) {
-                sendResponseStatus(401);
-                exit();
-            }
+        $row = $result->fetch_assoc();
+        if(!password_verify($password, $row["Password"])) {
+            sendResponseStatus(401);
+            exit();
         }
+        return $row["User_ID"];
     }
 
     function verifyUser($name, $password) {
@@ -32,10 +33,12 @@
         }
         
         //verify password
-        verifyPassword($result, $password);
+        $userID = verifyPassword($result, $password);
 
         //close the connection
         $conn->close();
+
+        return $userID;
 
     }
 
