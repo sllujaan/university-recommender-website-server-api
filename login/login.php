@@ -5,9 +5,9 @@ include_once("../util/session.php");
 include_once("../DB/validator.php");
 
 
-VALIDATOR\validatePostRequest();
+\UTIL_VALIDATOR\validatePostRequest();
 
-VALIDATOR\validateLoginParams();
+\UTIL_VALIDATOR\validateLoginParams();
 
 $userId = DATABASE_VALIDATOR\verifyUser($_POST["name"], $_POST["password"]);
 

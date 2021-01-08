@@ -43,6 +43,34 @@
     }
 
 
+    //check if the name exists in database
+    function isNameExists($name) {
+        $conn = initConnection(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE);
+        
+        $stmt = $conn->prepare("SELECT User_ID, Password FROM user WHERE Name = ?");
+        $stmt->bind_param("s", $pName);
+
+        // set parameters and execute
+        $pName = $name;
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        //if user found there should be only one row
+        if($result->num_rows !== 1) { 
+            sendResponseStatus(401);
+            exit();
+        }
+        
+        //verify password
+        $userID = verifyPassword($result, $password);
+
+        //close the connection
+        $conn->close();
+
+        return $userID;
+    }
+
+
 
     // $sql = "select * from role";
 

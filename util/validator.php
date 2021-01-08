@@ -1,12 +1,12 @@
 <?php
-namespace VALIDATOR;
+namespace UTIL_VALIDATOR;
 include_once("../util/util.php");
 include_once("../util/response.php");
 
-// Start the session
-if(session_id() === '') {
-    session_start();
-}
+// // Start the session
+// if(session_id() === '') {
+//     session_start();
+// }
 
 
 
