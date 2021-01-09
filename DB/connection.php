@@ -6,9 +6,9 @@
     error_reporting(E_ALL & ~E_WARNING);
     
     
-    function initConnection($MYSQL_HOST, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DATABASE) {
+    function initConnection() {
     
-        $mysqli = new mysqli($MYSQL_HOST, $MYSQL_USER, $MYSQL_PASSWORD, $MYSQL_DATABASE);
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE);
 
         // Check connection
         if ($mysqli->connect_errno) {

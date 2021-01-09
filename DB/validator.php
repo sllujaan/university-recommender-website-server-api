@@ -1,6 +1,6 @@
 <?php
     namespace DATABASE_VALIDATOR;
-    include_once("credential.php");
+    //include_once("credential.php");
     include_once("connection.php");
     include_once("../util/response.php");
 
@@ -16,7 +16,7 @@
     }
 
     function verifyUser($name, $password) {
-        $conn = initConnection(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE);
+        $conn = initConnection();
         
         $stmt = $conn->prepare("SELECT User_ID, Password FROM user WHERE Name = ?");
         $stmt->bind_param("s", $pName);
@@ -45,7 +45,8 @@
 
     //check if the name exists in database
     function verifyUserName($name) {
-        $conn = initConnection(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE);
+        //create new connection
+        $conn = initConnection();
         
         $stmt = $conn->prepare("SELECT User_ID FROM user WHERE Name = ?");
         $stmt->bind_param("s", $pName);
@@ -70,6 +71,7 @@
         //close the connection
         $conn->close();
     }
+    
 
 
 
