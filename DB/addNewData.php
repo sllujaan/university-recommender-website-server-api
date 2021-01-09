@@ -5,12 +5,12 @@
     include_once("../util/response.php");
 
     function getSingleColumn($conn, $sql, $columnName) {
-
         $result = $conn->query($sql);
 
         //in database there should be a record
         if($result->num_rows !== 1) { 
             sendResponseStatus(500);
+            //echo "Failed to Retrieve the Record: " . $conn->error;
             exit();
         }
 
@@ -25,7 +25,7 @@
         $conn = initConnection();
 
         //retrieve normal User Role_ID
-        $sql = "select (Role_ID) from Role where Name = 'user';";
+        $sql = "select (Role_IDa) from Role where Name = 'user';";
         $UserRoleID = getSingleColumn($conn, $sql, "Role_ID");
 
 
