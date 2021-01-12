@@ -1,6 +1,7 @@
 <?php
     namespace DATABASE_ADD_NEW_DATA;
     //include_once("credential.php");
+    include_once("validator.php");
     include_once("connection.php");
     include_once("../util/response.php");
 
@@ -94,6 +95,11 @@
 
         //close the connection
         $conn->close();
+    }
+
+
+    function addNewUniversity() {
+        
     }
 
 

@@ -2,6 +2,9 @@
 
 namespace SESSION;
 
+define("SESSION_TIME", 20);
+
+
 // Start the session
 if(session_id() === '') {
     session_start();
@@ -28,12 +31,11 @@ function clearSession($session_id) {
 
 
 
-function validateSession() {
-    $requestData = getRequestData();
-    $session_id = $requestData["session_id"];
-    $user_id = $requestData["user_id"];
+function validateSession($session_id, $user_id) {
 
-    if(!is_string($session_id) || !is_integer($user_id)) {
+    
+
+    if(!is_string($session_id) || !is_integer((int)$user_id)) {
         sendResponseStatus(400);    //400 bad request
         exit();
     }
@@ -45,19 +47,33 @@ function validateSession() {
     }
 
     //check if session id is valid
-    if($_SESSION[$session_id] !== $user_id) {
+    if((int)$_SESSION[$session_id] !== (int)$user_id) {
         clearSession($session_id);
         sendResponseStatus(401);    //401 unauthorized
         exit();
     }
 
     //check if session expired
-    if((time() - $_SESSION[$session_id . "_created"]) > 10) {
+    if((time() - $_SESSION[$session_id . "_created"]) > SESSION_TIME) {
         clearSession($session_id);
         sendResponseStatus(408);    //408 request timeout
         exit();
     }
     
+}
+
+//data in coming through request body
+function validateSession_BODY() {
+    $requestData = getRequestData();
+    $session_id = $requestData["session_id"];
+    $user_id = $requestData["user_id"];
+
+    validateSession($session_id, $user_id);
+}
+
+//data in coming through post request
+function validateSession_POST() {
+    validateSession($_POST["session_id"], $_POST["user_id"]);
 }
 
 

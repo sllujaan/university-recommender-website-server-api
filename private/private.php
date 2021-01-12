@@ -10,7 +10,7 @@ include_once("../util/session.php");
 
 \UTIL_VALIDATOR\validateAuthParams_BODY();
 
-\SESSION\validateSession();
+\SESSION\validateSession_BODY();
 
 
 echo "private";
