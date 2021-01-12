@@ -97,9 +97,17 @@
         $conn->close();
     }
 
+    
+
 
     function addNewUniversity() {
-        
+        //create new connection
+        $conn = initConnection();
+
+        \DATABASE_VALIDATOR\verifyAdmin($conn);
+
+        //close the connection
+        $conn->close();
     }
 
 

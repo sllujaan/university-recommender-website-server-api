@@ -2,7 +2,7 @@
 
 namespace SESSION;
 
-define("SESSION_TIME", 20);
+define("SESSION_TIME", 60*60);
 
 
 // Start the session

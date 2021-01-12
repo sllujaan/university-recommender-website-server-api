@@ -73,10 +73,7 @@
     }
 
 
-    function verifyAdmin() {
-
-        //create new connection
-        $conn = initConnection();
+    function verifyAdmin($conn) {
 
         $sql = "select * from User inner join Role
         on User.Role_ID = Role.Role_ID
@@ -85,12 +82,14 @@
 
         echo $sql;
 
+        $result = $conn->query($sql);
 
-        //close the connection
-        $conn->close();
-
-
-        
+        //in database there should be only one admin
+        if($result->num_rows !== 1) { 
+            sendResponseStatus(401);
+            //echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
 
     }
     

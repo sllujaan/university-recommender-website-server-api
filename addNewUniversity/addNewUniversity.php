@@ -4,6 +4,7 @@
     include_once("../util/validator.php");
     include_once("../util/session.php");
     include_once("../DB/validator.php");
+    include_once("../DB/addNewData.php");
 
     \UTIL_VALIDATOR\validatePostRequest();
 
@@ -11,7 +12,7 @@
 
     \SESSION\validateSession_POST();
 
-    \DATABASE_VALIDATOR\verifyAdmin();
+    \DATABASE_ADD_NEW_DATA\addNewUniversity();
 
     echo "done";
 
