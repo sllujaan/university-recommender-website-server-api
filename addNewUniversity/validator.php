@@ -5,6 +5,7 @@
     include_once("../util/response.php");
 
 
+
     function validateNewUniversityParams() {
         if(empty($_POST["name"]) || empty($_POST["password"])) {
             sendResponseStatus(400);

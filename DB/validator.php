@@ -71,6 +71,18 @@
         //close the connection
         $conn->close();
     }
+
+
+    function verifyAdmin() {
+
+        $sql = "select * from User inner join Role
+        on User.Role_ID = Role.Role_ID
+        and Role.Name = 'admin'
+        and User.User_ID = " . $_POST[""] . ";";
+
+        
+
+    }
     
 
 
