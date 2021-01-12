@@ -18,12 +18,6 @@ function validatePostRequest() {
 }
 
 
-function validateLoginParams() {
-    if(empty($_POST["name"]) || empty($_POST["password"])) {
-        sendResponseStatus(400);
-        exit();
-    }
-}
 
 function validateRegisterParams() {
     if(empty($_POST["name"]) || empty($_POST["password"])) {
@@ -33,9 +27,17 @@ function validateRegisterParams() {
 }
 
 
-function validateAuthParams() {
+function validateAuthParams_BODY() {
     $reqestData = getRequestData();
     if(empty($reqestData["session_id"]) || empty($reqestData["user_id"])) {
+        sendResponseStatus(400);
+        exit();
+    }
+}
+
+
+function validateAuthParams_POST() {
+    if(empty($_POST["session_id"]) || empty($_POST["user_id"])) {
         sendResponseStatus(400);
         exit();
     }

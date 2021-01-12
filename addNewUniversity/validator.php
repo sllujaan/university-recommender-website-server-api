@@ -1,17 +1,11 @@
 <?php
 
-    namespace LOGIN_VALIDATOR;
+    namespace NEW_UNIVERSITY_VALIDATOR;
     include_once("../util/util.php");
     include_once("../util/response.php");
 
-    function validateLoginName() {
-        if(empty($_POST["name"])) {
-            sendResponseStatus(400);
-            exit();
-        }
-    }
 
-    function validateLoginParams() {
+    function validateNewUniversityParams() {
         if(empty($_POST["name"]) || empty($_POST["password"])) {
             sendResponseStatus(400);
             exit();

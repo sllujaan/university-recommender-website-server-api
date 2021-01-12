@@ -6,11 +6,11 @@ include_once("../util/session.php");
 
 
 
-validatePostRequest();
+\UTIL_VALIDATOR\validatePostRequest();
 
-validateAuthParams();
+\UTIL_VALIDATOR\validateAuthParams_BODY();
 
-validateSession();
+\SESSION\validateSession();
 
 
 echo "private";

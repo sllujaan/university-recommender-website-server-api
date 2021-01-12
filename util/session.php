@@ -1,5 +1,6 @@
 <?php
 
+namespace SESSION;
 
 // Start the session
 if(session_id() === '') {
