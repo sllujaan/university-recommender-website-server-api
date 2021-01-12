@@ -68,9 +68,11 @@
             )"
         );
 
+        $hasedPassword = password_hash($_POST["password"], PASSWORD_DEFAULT);
+
         $stmt->bind_param(
             "iissssiddd", $UserRoleID, $AccountSatatusID,
-            $_POST["name"], $_POST["password"], $_POST["email"],
+            $_POST["name"], $hasedPassword, $_POST["email"],
             $_POST["start_admission_date"], $_POST["budget_us_$"], $_POST["s_education_pct"],
             $_POST["h_education_pct"], $_POST["etm_pct"]
         );
@@ -78,7 +80,7 @@
         //$stmt->execute();
         if(!$stmt->execute()) {
             sendResponseStatus(500);
-            echo "Failed to add the Record: " . $conn->error;
+            //echo "Failed to add the Record: " . $conn->error;
             exit();
         }
         
