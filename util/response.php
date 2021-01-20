@@ -16,6 +16,8 @@ function getMessage($statusCode) {
             return prepareMsg("Unauthorized", $msg);
         case 408:
             return prepareMsg("Request Timeout", $msg);
+        case 404:
+            return prepareMsg("Not Found", $msg);
         case 500:
             return prepareMsg("Internal Server Error", "Please contact to Administrator!");
         default:

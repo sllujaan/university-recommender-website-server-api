@@ -3,9 +3,6 @@
 
     include_once("../DB/getData.php");
 
-
-    \DATABASE_GET_DATA\getUsers();
-
-    echo "done";
+    echo \DATABASE_GET_DATA\getUsersJSON();
 
 ?>
