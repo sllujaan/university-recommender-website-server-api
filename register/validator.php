@@ -19,6 +19,22 @@
 
     }
 
+
+    function validateRegisterNameParams() {
+        if(empty($_POST["name"])) {
+            sendResponseStatus(400);
+            exit();
+        }
+    }
+
+    function validateRegisterEmailParams() {
+        if(empty($_POST["email"])) {
+            sendResponseStatus(400);
+            exit();
+        }
+    }
+
+
     
 
 

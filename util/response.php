@@ -18,6 +18,8 @@ function getMessage($statusCode) {
             return prepareMsg("Request Timeout", $msg);
         case 404:
             return prepareMsg("Not Found", $msg);
+        case 409:
+            return prepareMsg("Conflict", $msg);
         case 500:
             return prepareMsg("Internal Server Error", "Please contact to Administrator!");
         default:
