@@ -1,6 +1,7 @@
 <?php
 
 namespace SESSION;
+include_once("response.php");
 
 define("SESSION_TIME", 60*60);
 
@@ -16,6 +17,14 @@ function createNewSession($userID) {
 
     $client["session_id"] = md5(uniqid(rand(), true));
     $client["user_id"] = $userID;
+
+    //check if session_id already exists, because the statement md5(uniqid(rand(), true))
+    //may generate duplicate key in future
+    if(!empty($_SESSION[$client["session_id"]])) {
+        sendResponseStatus(500);
+        exit();
+    }
+
 
     $_SESSION[$client["session_id"]] = $client["user_id"];
     $_SESSION[$client["session_id"] . "_created"] = time();

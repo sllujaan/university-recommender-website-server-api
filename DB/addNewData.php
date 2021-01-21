@@ -69,6 +69,12 @@
             )"
         );
 
+        //query error
+        if(!$stmt) {
+            sendResponseStatus(500);
+            exit();
+        }
+
         $hasedPassword = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
         $stmt->bind_param(
@@ -78,20 +84,18 @@
             $_POST["h_education_pct"], $_POST["etm_pct"]
         );
 
-        //$stmt->execute();
+
+        define("DUPLICATE_KEY", 1062);
         if(!$stmt->execute()) {
+            if((int)$stmt->errno === DUPLICATE_KEY) {
+                sendResponseStatus(400);
+                //echo "Failed to add the Record: " . $stmt->error;
+                exit();
+            }
+            //other error code from database
             sendResponseStatus(500);
-            //echo "Failed to add the Record: " . $conn->error;
             exit();
         }
-        
-        $result = $stmt->get_result();
-
-        echo $_POST["name"];
-
-
-        
-
 
         //close the connection
         $conn->close();

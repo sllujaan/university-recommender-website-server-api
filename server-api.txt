@@ -1,0 +1,11 @@
+******************server api****************************
+
+********************************************
+URL:
+    http://localhost/university-recommender-website-server-api/login/login.php
+
+Responses:
+    status 200: OK (login success)
+    status 400: Bad request (either request is not post or (name / email) is missing)
+    status 401: Unauthorized (user does not exists)
+**********************************************

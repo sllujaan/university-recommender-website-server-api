@@ -10,7 +10,7 @@
     
     \REGISTER_VALIDATOR\validateRegisterNameParams();
 
-    \DATABASE_VALIDATOR\isUserValid();
+    \DATABASE_VALIDATOR\validateUserName();
 
 
 

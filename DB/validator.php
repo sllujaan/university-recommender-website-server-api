@@ -94,7 +94,22 @@
     }
 
 
-    function isUserValid() {
+    function handleStatementExecution($stmt) {
+        if(!$stmt->execute()) {
+            sendResponseStatus(500);
+            echo "Failed to add the Record: " . $stmt->error;
+            exit();
+        }
+
+        $res = $stmt->get_result();
+        if($res->num_rows > 0) {
+            sendResponseStatus(409); //conflict
+            exit();
+        }
+    }
+
+
+    function validateUserName() {
         //create new connection
         $conn = initConnection();
 
@@ -109,20 +124,29 @@
 
         $stmt->bind_param("s", $_POST["name"]);
 
-        if(!$stmt->execute()) {
+        handleStatementExecution($stmt);
+
+        //close the connection
+        $conn->close();
+    }
+
+
+    function validateUserEmail() {
+        //create new connection
+        $conn = initConnection();
+
+        //sql query to retrieve users
+        $stmt = $conn->prepare("SELECT User_ID FROM user WHERE Email = ?;");
+
+        //query error
+        if(!$stmt) {
             sendResponseStatus(500);
-            echo "Failed to add the Record: " . $stmt->error;
             exit();
         }
 
-        $res = $stmt->get_result();
-        if($res->num_rows === 0) {
-            sendResponseStatus(200);
-            exit();
-        }
+        $stmt->bind_param("s", $_POST["email"]);
 
-        sendResponseStatus(409); //conflict
-        exit();
+        handleStatementExecution($stmt);
 
         //close the connection
         $conn->close();
