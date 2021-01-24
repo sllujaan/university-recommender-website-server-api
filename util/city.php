@@ -1,7 +1,7 @@
 <?php
 
     include_once("response.php");
-
+    include_once("../DB/getData.php");
 
     if(!isset($_GET['id'])) {
         //no id found in url
@@ -16,7 +16,7 @@
         exit();
     }
 
-    
+    echo \DATABASE_GET_DATA\getCities($_GET['id']);
 
 
     sendResponseStatus(200);

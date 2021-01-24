@@ -99,6 +99,41 @@
             exit();
         }
 
+        $result = $stmt->get_result();
+
+        //check if there is any error in query
+        if(!$result) {
+            sendResponseStatus(500);
+            echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
+
+        //no row found
+        if($result->num_rows === 0) {
+            sendResponseStatus(404);
+            exit();
+        }
+
+        $Cities = array();
+        while($row = $result->fetch_assoc()) {
+            $Cities[] = $row;
+        }
+
+        return json_encode($Cities);
+
+        //close the connection
+        $conn->close();
+    }
+
+
+
+    function getPrograms() {
+        //create new connection
+        $conn = initConnection();
+
+        //sql query to retrieve users
+        $sql = "select Program_ID, Name from Program;";
+
         $result = $conn->query($sql);
 
         //check if there is any error in query
@@ -114,12 +149,12 @@
             exit();
         }
 
-        $Countries = array();
+        $Programs = array();
         while($row = $result->fetch_assoc()) {
-            $Countries[] = $row;
+            $Programs[] = $row;
         }
 
-        return json_encode($Countries);
+        return json_encode($Programs);
 
         //close the connection
         $conn->close();
