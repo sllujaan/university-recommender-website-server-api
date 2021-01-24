@@ -1,5 +1,6 @@
 <?php
-
+    header("Access-Control-Allow-Origin: *");
+    
     include_once("response.php");
     include_once("../DB/getData.php");
 
