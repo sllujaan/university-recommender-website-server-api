@@ -12,7 +12,7 @@
 
     \DATABASE_VALIDATOR\validateUserName();
 
-
-
+    sendResponseStatus(200);
+    exit();
 
 ?>

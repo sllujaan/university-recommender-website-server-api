@@ -32,12 +32,14 @@ function getMessage($statusCode) {
 function sendResponseStatus($statusCode) {
     $sapitype = php_sapi_name();
     if (substr($sapitype, 0, 3) === 'cgi') {
+        header("Access-Control-Allow-Origin: *");
+        header("Status: " . $statusCode);
         echo getMessage($statusCode);
-        return header("Status: " . $statusCode); 
     }
     else {
+        header("Access-Control-Allow-Origin: *");
+        header("HTTP/1.1 " . $statusCode);
         echo getMessage($statusCode);
-        return header("HTTP/1.1 " . $statusCode);
     }
 }
 

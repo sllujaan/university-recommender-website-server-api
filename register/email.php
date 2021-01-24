@@ -12,7 +12,8 @@
 
     \DATABASE_VALIDATOR\validateUserEmail();
 
-
+    sendResponseStatus(200);
+    exit();
 
 
 ?>
