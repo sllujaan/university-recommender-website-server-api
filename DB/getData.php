@@ -166,7 +166,14 @@
         $conn = initConnection();
 
         //sql query to retrieve users
-        $sql = "select * from User;";
+        $sql = "select User.Name as Name, User.Email as Email, Country.Name as Country, City.Name as City, Program.Name as Program
+                from User 
+                inner join Role on User.Role_ID = Role.Role_ID
+                inner join Account_Status on User.Account_Status_ID = Account_Status.Account_Status_ID
+                inner join Country on User.Country_ID = Country.Country_ID
+                inner join City on User.City_ID = City.City_ID
+                inner join Program on User.Program_ID = Program.Program_ID;";
+        
 
         $result = $conn->query($sql);
 
