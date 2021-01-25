@@ -1,5 +1,6 @@
 <?php
 
+    include_once("../util/header.php");
     include_once("validator.php");
     include_once("../DB/validator.php");
     include_once("../util/validator.php");
@@ -12,7 +13,6 @@
 
     \DATABASE_VALIDATOR\validateUserName();
 
-    sendResponseStatus(200);
-    exit();
+    
 
 ?>
