@@ -160,6 +160,40 @@
         $conn->close();
     }
 
+
+    function getUsers() {
+        //create new connection
+        $conn = initConnection();
+
+        //sql query to retrieve users
+        $sql = "select * from User;";
+
+        $result = $conn->query($sql);
+
+        //check if there is any error in query
+        if(!$result) {
+            sendResponseStatus(500);
+            echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
+
+        //no row found
+        if($result->num_rows === 0) {
+            sendResponseStatus(404);
+            exit();
+        }
+
+        $Users = array();
+        while($row = $result->fetch_assoc()) {
+            $Users[] = $row;
+        }
+
+        return json_encode($Users);
+
+        //close the connection
+        $conn->close();
+    }
+
     
 
 ?>
