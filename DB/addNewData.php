@@ -39,23 +39,27 @@
         $AccountSatatusID = getSingleColumn($conn, $sql, "Account_Status_ID");
 
 
-        
-
-        $stmt = $conn->prepare("
-            insert into User (
-            `Role_ID`,
-            `Account_Status_ID`,
-            `Name`,
-            `Password`,
-            `Email`,
-            `Start_Admission_Date`,
-            `Budget`,
-            `S_Education_PCT`,
-            `H_Education_PCT`,
-            `ETM_PCT`
+        $stmt = $conn->prepare(
+            "insert into User (
+                `Role_ID`,
+                `Account_Status_ID`,
+                `Name`,
+                `Password`,
+                `Email`,
+                `Country_ID`,
+                `City_ID`,
+                `Program_ID`,
+                `Start_Admission_Date`,
+                `Budget`,
+                `S_Education_PCT`,
+                `H_Education_PCT`,
+                `ETM_PCT`
             )
             values
             (
+                ?,
+                ?,
+                ?,
                 ?,
                 ?,
                 ?,
@@ -78,8 +82,9 @@
         $hasedPassword = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
         $stmt->bind_param(
-            "iissssiddd", $UserRoleID, $AccountSatatusID,
+            "iisssiiisiddd", $UserRoleID, $AccountSatatusID,
             $_POST["name"], $hasedPassword, $_POST["email"],
+            $_POST["country_id"], $_POST["city_id"], $_POST["program_id"],
             $_POST["start_admission_date"], $_POST["budget_us_$"], $_POST["s_education_pct"],
             $_POST["h_education_pct"], $_POST["etm_pct"]
         );
