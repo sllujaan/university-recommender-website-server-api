@@ -3,7 +3,7 @@
 namespace SESSION;
 include_once("response.php");
 
-define("SESSION_TIME", 60*60);
+define("SESSION_TIME", 6);
 
 
 // Start the session
@@ -42,8 +42,6 @@ function clearSession($session_id) {
 
 function validateSession($session_id, $user_id) {
 
-    
-
     if(!is_string($session_id) || !is_integer((int)$user_id)) {
         sendResponseStatus(400);    //400 bad request
         exit();
@@ -68,8 +66,10 @@ function validateSession($session_id, $user_id) {
         sendResponseStatus(408);    //408 request timeout
         exit();
     }
-    
 }
+
+
+
 
 //data in coming through request body
 function validateSession_BODY() {
@@ -80,8 +80,14 @@ function validateSession_BODY() {
     validateSession($session_id, $user_id);
 }
 
+
 //data in coming through post request
 function validateSession_POST() {
+    if(empty($_POST["session_id"]) || empty($_POST["user_id"])) {
+        sendResponseStatus(505);
+        exit();
+    }
+    
     validateSession($_POST["session_id"], $_POST["user_id"]);
 }
 
