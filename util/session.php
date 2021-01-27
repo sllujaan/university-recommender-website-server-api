@@ -3,7 +3,7 @@
 namespace SESSION;
 include_once("response.php");
 
-define("SESSION_TIME", 6);
+define("SESSION_TIME", 60*60); //60*60 = 1 hour
 
 
 // Start the session
