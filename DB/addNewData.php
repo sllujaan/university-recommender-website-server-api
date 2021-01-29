@@ -5,6 +5,11 @@
     include_once("connection.php");
     include_once("../util/response.php");
 
+
+    /**
+     * retrieves a single column from database
+     * from the given sql statement, connection and column name.
+     */
     function getSingleColumn($conn, $sql, $columnName) {
         $result = $conn->query($sql);
 
@@ -26,7 +31,9 @@
         return $id;
     }
 
-    //add new user in database----
+    /**
+     * adds new user in the database.
+     */
     function addUser() {
         //create new connection
         $conn = initConnection();
@@ -89,7 +96,6 @@
             $_POST["h_education_pct"], $_POST["etm_pct"]
         );
 
-
         define("DUPLICATE_KEY", 1062);
         if(!$stmt->execute()) {
             if((int)$stmt->errno === DUPLICATE_KEY) {
@@ -107,35 +113,19 @@
     }
 
     
-
-
+    /**
+     * adds new universiy in the database
+     */
     function addNewUniversity() {
         //create new connection
         $conn = initConnection();
 
         \DATABASE_VALIDATOR\verifyAdmin($conn);
 
+        //rest of the code....
+
         //close the connection
         $conn->close();
     }
-
-
-    
-
-
-
-    // $sql = "select * from role";
-
-    // $result = $conn->query($sql);
-
-    // if($result->num_rows > 0) {
-    //     while($row = $result->fetch_assoc()) {
-    //         echo "<br>name: ". $row["Name"] . "<br>";
-    //     }
-    // }
-    // else {
-    //     echo "0 results";
-    // }
-
 
 ?>
