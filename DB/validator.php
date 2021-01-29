@@ -5,7 +5,9 @@
     include_once("../util/response.php");
 
 
-    //make sure there is only one sql row in result
+    /**
+     * verifies password
+     */
     function verifyPassword($result, $password) {
         $row = $result->fetch_assoc();
         if(!password_verify($password, $row["Password"])) {
@@ -15,6 +17,9 @@
         return $row["User_ID"];
     }
 
+    /**
+     * verifies if the user exits in the database.
+     */
     function verifyUser($name, $password) {
         $conn = initConnection();
         
@@ -31,19 +36,16 @@
             sendResponseStatus(401);
             exit();
         }
-        
+
         //verify password
         $userID = verifyPassword($result, $password);
-
         //close the connection
         $conn->close();
-
         return $userID;
-
     }
 
 
-    //check if the name exists in database
+    //checks if the name exists in database
     function verifyUserName($name) {
         //create new connection
         $conn = initConnection();
@@ -72,7 +74,9 @@
         $conn->close();
     }
 
-
+    /**
+     * varifies the user is admin.
+     */
     function verifyAdmin($conn) {
 
         $sql = "select * from User inner join Role
@@ -93,7 +97,9 @@
 
     }
 
-
+    /**
+     * handles statement execution and sends appropriate response to user.
+     */
     function handleStatementExecution($stmt) {
         if(!$stmt->execute()) {
             sendResponseStatus(500);
@@ -109,6 +115,9 @@
     }
 
 
+    /**
+     * validates if user name exists in the database.
+     */
     function validateUserName() {
         //create new connection
         $conn = initConnection();
@@ -131,6 +140,9 @@
     }
 
 
+    /**
+     * validates if user email exists in the database.
+     */
     function validateUserEmail() {
         //create new connection
         $conn = initConnection();
@@ -151,22 +163,5 @@
         //close the connection
         $conn->close();
     }
-    
-
-
-
-    // $sql = "select * from role";
-
-    // $result = $conn->query($sql);
-
-    // if($result->num_rows > 0) {
-    //     while($row = $result->fetch_assoc()) {
-    //         echo "<br>name: ". $row["Name"] . "<br>";
-    //     }
-    // }
-    // else {
-    //     echo "0 results";
-    // }
-
 
 ?>

@@ -35,11 +35,4 @@
         }
     }
 
-
-    // function validateRegisterParams() {
-    //     if(empty($_POST["name"]) || empty($_POST["password"])) {
-    //         sendResponseStatus(400);
-    //         exit();
-    //     }
-    // }
 ?>
