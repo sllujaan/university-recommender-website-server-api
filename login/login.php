@@ -1,20 +1,27 @@
 <?php
 
-include_once("../util/header.php");
-include_once("validator.php");
-include_once("../util/validator.php");
-include_once("../util/session.php");
-include_once("../DB/validator.php");
+    include_once("../util/header.php");
+    include_once("validator.php");
+    include_once("../util/validator.php");
+    include_once("../util/session.php");
+    include_once("../DB/validator.php");
 
 
-\UTIL_VALIDATOR\validatePostRequest();
+    /*make sure that the incoming request is a post request*/
+    \UTIL_VALIDATOR\validatePostRequest();
 
-\LOGIN_VALIDATOR\validateLoginParams();
+    /*make sure that in the request (user name and password) are present*/
+    \LOGIN_VALIDATOR\validateLoginParams();
 
-$userId = \DATABASE_VALIDATOR\verifyUser($_POST["name"], $_POST["password"]);
+    /**
+     * check if the user exists in the database
+     * returns: user id
+     */
+    $userId = \DATABASE_VALIDATOR\verifyUser($_POST["name"], $_POST["password"]);
 
-echo \SESSION\createNewSession($userId);
-
-
+    /** 
+     * print json on screen that contains session_id and user_id
+    */
+    echo \SESSION\createNewSession($userId);
 
 ?>
