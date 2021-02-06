@@ -77,14 +77,13 @@
     /**
      * varifies the user is admin.
      */
-    function verifyAdmin($conn) {
+    function verifyAdmin($conn, $userID) {
 
         $sql = "select * from User inner join Role
         on User.Role_ID = Role.Role_ID
         and Role.Name = 'admin'
-        and User.User_ID = " . $_SESSION[$_POST["session_id"]] . ";";
+        and User.User_ID = " . $userID . ";";
 
-        echo $sql;
 
         $result = $conn->query($sql);
 

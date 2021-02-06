@@ -8,7 +8,7 @@
 
     \UTIL_VALIDATOR\validatePostRequest();
 
-    \UTIL_VALIDATOR\validateAuthParams_POST();
+    //\UTIL_VALIDATOR\validateAuthParams_POST();
 
     \SESSION\validateSession_POST();
 

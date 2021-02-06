@@ -57,7 +57,7 @@
                 `City_ID`,
                 `Program_ID`,
                 `Start_Admission_Date`,
-                `Budget`,
+                `Budget_US_$`,
                 `S_Education_PCT`,
                 `H_Education_PCT`,
                 `ETM_PCT`
@@ -120,9 +120,10 @@
         //create new connection
         $conn = initConnection();
 
-        \DATABASE_VALIDATOR\verifyAdmin($conn);
+        \DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$_POST["session_id"]]);
 
         //rest of the code....
+        
 
         //close the connection
         $conn->close();

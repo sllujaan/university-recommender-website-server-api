@@ -176,4 +176,59 @@
         $conn->close();
     }
 
+
+
+
+    /**
+     * retrieves users requests form database;
+     */
+    function getUsersRequests() {
+        //create new connection
+        $conn = initConnection();
+
+        //sql query to retrieve users
+        $sql = "
+                select 
+                User.Name as Name, User.Email as Email, User.Start_Admission_Date as User_Start_Admission_Date,
+                User.S_Education_PCT as User_S_Education_PCT, User.H_Education_PCT as User_H_Education_PCT,
+                User.ETM_PCT as User_ETM_PCT, User.Budget_US_$ as User_Budget_US_$,
+                Role.Name as User_Role, Request.Date_Time as Request_Creation_Date,
+                Country.Name as Country, City.Name as City, Program.Name as Program, Account_Status.Name as Account_Status_Name
+                
+                from User
+                inner join Request on User.User_ID = Request.User_ID
+                inner join Role on User.Role_ID = Role.Role_ID
+                inner join Account_Status on User.Account_Status_ID = Account_Status.Account_Status_ID
+                inner join Country on User.Country_ID = Country.Country_ID
+                inner join City on User.City_ID = City.City_ID
+                inner join Program on User.Program_ID = Program.Program_ID;
+                ";
+        
+
+        $result = $conn->query($sql);
+
+        //check if there is any error in query
+        if(!$result) {
+            sendResponseStatus(500);
+            echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
+
+        //no row found
+        if($result->num_rows === 0) {
+            sendResponseStatus(404);
+            exit();
+        }
+
+        $Users = array();
+        while($row = $result->fetch_assoc()) {
+            $Users[] = $row;
+        }
+
+        return json_encode($Users);
+
+        //close the connection
+        $conn->close();
+    }
+
 ?>
