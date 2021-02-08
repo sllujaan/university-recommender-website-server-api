@@ -32,9 +32,12 @@
     }
 
     /**
+     * 
      * adds new user in the database.
      */
     function addUser() {
+        //function has been deprecated.
+        trigger_error("Deprecated function called.", E_USER_NOTICE);
         //create new connection
         $conn = initConnection();
 
@@ -222,13 +225,19 @@
     }
 
     function handleException($e) {
-        switch ($e) {
+        switch ($e->getMessage()) {
             case 'handleStatementExecutionTrans::400':
-                # code...
+                sendResponseStatus(400);
+                //echo "Failed to add the Record: " . $stmt->error;
+                exit();
                 break;
             
             default:
-                # code...
+                sendResponseStatus(500);
+                echo "UNKOWN ERROR<br>";
+                echo $e->getMessage();
+                //echo "Failed to add the Record: " . $stmt->error;
+                exit();
                 break;
         }
     }
@@ -243,7 +252,6 @@
         $conn = initConnection();
 
         try{
-
             //First of all, let's begin a transaction
             $conn->begin_transaction();
 
@@ -254,13 +262,10 @@
             //commit transaction.
             $conn->commit();
 
-            echo "commited.<br>";
-        
         }
         catch(\Exception $e) {
-            echo "exception.<br>";
             $conn->rollback();
-            echo $e->getMessage();
+            handleException($e);
         }
         
 
