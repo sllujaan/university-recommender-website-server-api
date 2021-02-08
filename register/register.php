@@ -14,6 +14,7 @@
     \REGISTER_VALIDATOR\validateRegisterParams();
 
     /*add the new user data in the database*/
-    \DATABASE_ADD_NEW_DATA\addUser();
+    //\DATABASE_ADD_NEW_DATA\addUser();
+    \DATABASE_ADD_NEW_DATA\addNewUserAndRequest();
 
 ?>

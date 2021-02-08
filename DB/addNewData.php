@@ -112,6 +112,165 @@
         $conn->close();
     }
 
+
+    function handleStatementExecutionTrans($stmt) {
+        define("DUPLICATE_KEY", 1062);
+        if(!$stmt->execute()) {
+            if((int)$stmt->errno === DUPLICATE_KEY) {
+                throw new \Exception("handleStatementExecutionTrans::400"); //bad request
+                // sendResponseStatus(400);
+                // //echo "Failed to add the Record: " . $stmt->error;
+                // exit();
+            }
+            //other error code from database
+            // sendResponseStatus(500);
+            // exit();
+            throw new \Exception("handleStatementExecutionTrans::500"); //internal server error
+        }
+    }
+
+
+    /**
+     * adds new user in the database.
+     */
+    function addNewUserTrans($conn) {
+
+        //retrieve Role_ID for normal users
+        $sql = "select (Role_ID) from Role where Name = 'user';";
+        $UserRoleID = getSingleColumn($conn, $sql, "Role_ID");
+        //retrieve Account_Status_ID for normal users
+        $sql = "select (Account_Status_ID) from Account_Status where Name = 'pending';";
+        $AccountSatatusID = getSingleColumn($conn, $sql, "Account_Status_ID");
+
+
+        $stmt = $conn->prepare(
+            "insert into User (
+                `Role_ID`,
+                `Account_Status_ID`,
+                `Name`,
+                `Password`,
+                `Email`,
+                `Country_ID`,
+                `City_ID`,
+                `Program_ID`,
+                `Start_Admission_Date`,
+                `Budget_US_$`,
+                `S_Education_PCT`,
+                `H_Education_PCT`,
+                `ETM_PCT`
+            )
+            values
+            (
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+            )"
+        );
+
+        //query error
+        if(!$stmt) {
+            throw new \Exception("addNewUserTrans::500"); //internal server error
+            // sendResponseStatus(500);
+            // exit();
+        }
+
+        $hasedPassword = password_hash($_POST["password"], PASSWORD_DEFAULT);
+
+        $stmt->bind_param(
+            "iisssiiisiddd", $UserRoleID, $AccountSatatusID,
+            $_POST["name"], $hasedPassword, $_POST["email"],
+            $_POST["country_id"], $_POST["city_id"], $_POST["program_id"],
+            $_POST["start_admission_date"], $_POST["budget_us_$"], $_POST["s_education_pct"],
+            $_POST["h_education_pct"], $_POST["etm_pct"]
+        );
+
+        handleStatementExecutionTrans($stmt);
+
+    }
+
+
+    function addNewRequestTrans($conn) {
+        $stmt = $conn->prepare("
+                insert into request (`User_ID`, `Date_Time`)
+                values(
+                (select User_ID from user where Name = ?)
+                , NOW());
+                ");
+        
+        //query error
+        if(!$stmt) {
+            throw new \Exception("addNewRequestTrans::500"); //internal server error
+            // sendResponseStatus(500);
+            // exit();
+        }
+
+        $stmt->bind_param("s", $_POST["name"]);
+
+        handleStatementExecutionTrans($stmt);
+
+        
+    }
+
+    function handleException($e) {
+        switch ($e) {
+            case 'handleStatementExecutionTrans::400':
+                # code...
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+    }
+
+
+    /**
+     * adds new user in the database.
+     */
+    function addNewUserAndRequest() {
+
+         //create new connection
+        $conn = initConnection();
+
+        try{
+
+            //First of all, let's begin a transaction
+            $conn->begin_transaction();
+
+            //add new user.
+            addNewUserTrans($conn);
+            //add new user registration request.
+            addNewRequestTrans($conn);
+            //commit transaction.
+            $conn->commit();
+
+            echo "commited.<br>";
+        
+        }
+        catch(\Exception $e) {
+            echo "exception.<br>";
+            $conn->rollback();
+            echo $e->getMessage();
+        }
+        
+
+        //close the connection
+        $conn->close();
+
+        
+
+    }
+
     
     /**
      * adds new universiy in the database
