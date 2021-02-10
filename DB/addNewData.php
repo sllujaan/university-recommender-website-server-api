@@ -249,7 +249,7 @@
      */
     function addNewUserAndRequest() {
 
-         //create new connection
+        //create new connection
         $conn = initConnection();
 
         try{
@@ -277,31 +277,52 @@
 
     }
 
+
+
+    function addNewUniversityTrans($conn) {
+
+    }
+
+    function addNewUniversityProgramTrans($conn, $universityID, $program) {
+        
+    }
+
     
     /**
      * adds new universiy in the database
      */
-    function addNewUniversity() {
-        //create new connection
-        $conn = initConnection();
+    function addNewUniversityAndProgramsTrans() {
 
         //\DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$_POST["session_id"]]);
 
         //rest of the code....
         $requestData = \UTIL\getRequestData();
-        print_r($requestData);
+        $programs = $requestData["programs"];
 
-        if(empty($requestData["UniversityName"])) {
-            echo "<br>Invalid data Name<br>";
+        //create new connection
+        $conn = initConnection();
+
+        try{
+            //First of all, let's begin a transaction
+            $conn->begin_transaction();
+
+            //add new user.
+            $universityID = addNewUniversityTrans($conn);
+            
+            //add new user registration request.
+            foreach ($programs as $program) {
+                addNewUniversityProgramTrans($conn, $universityID, $program);
+            }
+            
+            //commit transaction.
+            $conn->commit();
+
         }
-
-        if(!is_array($requestData["programs"])) {
-            echo "<br>Invalid data Programs<br>";
+        catch(\Exception $e) {
+            $conn->rollback();
+            handleException($e);
         }
         
-        echo count($requestData["programs"]);
-        
-
         //close the connection
         $conn->close();
     }

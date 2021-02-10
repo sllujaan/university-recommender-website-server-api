@@ -10,7 +10,7 @@
 
     \NEW_UNIVERSITY_VALIDATOR\validateNewUniversityParams_BODY();
 
-    //\DATABASE_ADD_NEW_DATA\addNewUniversity();
+    \DATABASE_ADD_NEW_DATA\addNewUniversityAndProgramsTrans();
 
     echo "<br>done<br>";
 
