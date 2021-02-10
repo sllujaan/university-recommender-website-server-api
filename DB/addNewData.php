@@ -279,12 +279,92 @@
 
 
 
-    function addNewUniversityTrans($conn) {
+    function addNewUniversityTrans($conn, $universityData) {
+
+        $stmt = $conn->prepare(
+            "insert into University (
+                `Name`,
+                `Description`,
+                `Country_ID`,
+                `City_ID`,
+                `Admission_Criteria`,
+                `Start_Admission_Date`,
+                `End_Admission_Date`,
+                `Total_ETM`,
+                `S_Education_MC_PCT`,
+                `H_Education_MC_PCT`,
+                `PCT_MC_ETM`,
+                `Phone`,
+                `Web_Link`,
+                `Email`,
+                `Address`
+            )
+            values(
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+            )"
+        );
+
+        $stmt->bind_param(
+            "ssiisssidddssss",
+            $universityData["Name"], $universityData["Description"], $universityData["Country_ID"],
+            $universityData["City_ID"], $universityData["Admission_Criteria"], $universityData["Start_Admission_Date"],
+            $universityData["End_Admission_Date"], $universityData["Total_ETM"], $universityData["S_Education_MC_PCT"],
+            $universityData["H_Education_MC_PCT"], $universityData["PCT_MC_ETM"], $universityData["Phone"],
+            $universityData["Web_Link"], $universityData["Email"], $universityData["Address"]
+        );
+
+        handleStatementExecutionTrans($stmt);
+
+        $sql = "select University_ID from University where name = ".$universityData["Name"].";";
+        $universityID = getSingleColumn();
 
     }
 
     function addNewUniversityProgramTrans($conn, $universityID, $program) {
         
+        $stmt = $conn->prepare(
+            "insert into University_Program (
+                `University_ID`,
+                `Program_ID`,
+                `Description`,
+                `Fee_Total`,
+                `Fee_Description`,
+                `MM_PCT`,
+                `MM_PN`
+            )
+            values(
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+            )"
+        );
+
+        $stmt->bind_param(
+            "ssiisssidddssss",
+            $universityID, $program["Program_ID"], $program["Description"],
+            $program["Fee_Total"], $program["Fee_Description"],  $program["MM_PCT"],
+            $program["MM_PN"]
+        );
+
+        handleStatementExecutionTrans($stmt);
     }
 
     
@@ -322,7 +402,7 @@
             $conn->rollback();
             handleException($e);
         }
-        
+
         //close the connection
         $conn->close();
     }
