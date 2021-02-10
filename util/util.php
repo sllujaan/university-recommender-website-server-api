@@ -1,5 +1,6 @@
 <?php
 
+namespace UTIL;
     /**
      * retrives data from request body.
      */

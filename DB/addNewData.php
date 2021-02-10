@@ -4,6 +4,7 @@
     include_once("validator.php");
     include_once("connection.php");
     include_once("../util/response.php");
+    include_once("../util/util.php");
 
 
     /**
@@ -284,9 +285,21 @@
         //create new connection
         $conn = initConnection();
 
-        \DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$_POST["session_id"]]);
+        //\DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$_POST["session_id"]]);
 
         //rest of the code....
+        $requestData = \UTIL\getRequestData();
+        print_r($requestData);
+
+        if(empty($requestData["UniversityName"])) {
+            echo "<br>Invalid data Name<br>";
+        }
+
+        if(!is_array($requestData["programs"])) {
+            echo "<br>Invalid data Programs<br>";
+        }
+        
+        echo count($requestData["programs"]);
         
 
         //close the connection
