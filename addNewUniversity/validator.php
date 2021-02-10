@@ -16,6 +16,23 @@
     }
 
 
+    function validateProgramsParams($programsArr) {
+        foreach ($programsArr as $program) {
+            print_r($program);
+            if(
+                empty($program["University_ID"]) || empty($program["Program_ID"]) ||
+                empty($program["Description"]) || empty($program["Fee_Total"]) ||
+                empty($program["Fee_Description"]) || empty($program["MM_PCT"]) ||
+                empty($program["MM_PN"])
+            ) {
+                echo "<br>Invalid data Programs<br>";
+                sendResponseStatus(400);    //bad request.
+                exit();
+            }
+        }
+    }
+
+
     function validateNewUniversityParams_BODY() {
         //get the request data as array
         $requestData = \UTIL\getRequestData();
@@ -39,12 +56,13 @@
             exit();
         }
 
-
-        if(!is_array($requestData["programs"]) && count($requestData["programs"]) < 1) {
-            echo "<br>Invalid data Programs<br>";
+        if(!is_array($requestData["programs"]) || count($requestData["programs"]) < 1) {
+            echo "<br>Invalid data Pro<br>";
             sendResponseStatus(400);    //bad request.
             exit();
         }
+
+        validateProgramsParams($requestData["programs"]);
 
 
 
