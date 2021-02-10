@@ -23,10 +23,30 @@
 
         $row = $result->fetch_assoc();
         $id = $row[$columnName];
-        //check that id is not empty. make columnName is correct
+        //check that id is not empty. make sure the columnName is correct
         if(empty($id)) {
             sendResponseStatus(500);
             exit();
+        }
+
+        return $id;
+    }
+
+    function getSingleColumnTrans($conn, $sql, $columnName) {
+        $result = $conn->query($sql);
+
+        //in database there should be a record
+        if($result->num_rows !== 1) { 
+            sendResponseStatus(500);
+            //echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
+
+        $row = $result->fetch_assoc();
+        $id = $row[$columnName];
+        //check that id is not empty. make sure the columnName is correct
+        if(empty($id)) {
+            throw new \Exception("getSingleColumnTrans::500"); //internal server error
         }
 
         return $id;
@@ -126,6 +146,7 @@
                 // //echo "Failed to add the Record: " . $stmt->error;
                 // exit();
             }
+            echo $stmt->error;
             //other error code from database
             // sendResponseStatus(500);
             // exit();
@@ -327,10 +348,18 @@
             $universityData["Web_Link"], $universityData["Email"], $universityData["Address"]
         );
 
+        //query error
+        if(!$stmt) {
+            throw new \Exception("addNewUniversityTrans::500"); //internal server error
+        }
+
         handleStatementExecutionTrans($stmt);
 
         $sql = "select University_ID from University where name = ".$universityData["Name"].";";
-        $universityID = getSingleColumn();
+        echo "<br>$sql<br>";
+        //$universityID = getSingleColumnTrans($conn, $sql, "University_ID");
+        
+        return $universityID;
 
     }
 
@@ -383,23 +412,29 @@
         $conn = initConnection();
 
         try{
+
+            echo "<br>begining the transaction...<br>";
             //First of all, let's begin a transaction
             $conn->begin_transaction();
 
             //add new user.
-            $universityID = addNewUniversityTrans($conn);
+            $universityID = addNewUniversityTrans($conn, $requestData);
             
-            //add new user registration request.
-            foreach ($programs as $program) {
-                addNewUniversityProgramTrans($conn, $universityID, $program);
-            }
+            echo  $universityID;
+            // //add new user registration request.
+            // foreach ($programs as $program) {
+            //     addNewUniversityProgramTrans($conn, $universityID, $program);
+            // }
             
             //commit transaction.
             $conn->commit();
 
+            echo "<br>commited.<br>";
+
         }
         catch(\Exception $e) {
             $conn->rollback();
+            echo "<br>rollbacked.<br>";
             handleException($e);
         }
 
