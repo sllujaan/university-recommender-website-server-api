@@ -18,9 +18,8 @@
 
     function validateProgramsParams($programsArr) {
         foreach ($programsArr as $program) {
-            print_r($program);
             if(
-                empty($program["University_ID"]) || empty($program["Program_ID"]) ||
+                empty($program["Program_ID"]) ||
                 empty($program["Description"]) || empty($program["Fee_Total"]) ||
                 empty($program["Fee_Description"]) || empty($program["MM_PCT"]) ||
                 empty($program["MM_PN"])

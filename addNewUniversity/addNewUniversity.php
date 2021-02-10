@@ -10,10 +10,6 @@
 
     \NEW_UNIVERSITY_VALIDATOR\validateNewUniversityParams_BODY();
 
-    //\UTIL_VALIDATOR\validateAuthParams_POST();
-
-    //\SESSION\validateSession_POST();
-
     //\DATABASE_ADD_NEW_DATA\addNewUniversity();
 
     echo "<br>done<br>";
