@@ -36,17 +36,16 @@
         $result = $conn->query($sql);
 
         //in database there should be a record
-        if($result->num_rows !== 1) { 
-            sendResponseStatus(500);
-            //echo "Failed to Retrieve the Record: " . $conn->error;
-            exit();
+        if($result->num_rows !== 1) {
+            throw new \Exception("Failed to Retrieve the Record: " . $conn->error . " (FUN: ".__FUNCTION__.")");
+
         }
 
         $row = $result->fetch_assoc();
         $id = $row[$columnName];
         //check that id is not empty. make sure the columnName is correct
         if(empty($id)) {
-            throw new \Exception("getSingleColumnTrans::500"); //internal server error
+            throw new \Exception("getSingleColumnTrans::500" . $conn->error . " (FUN: ".__FUNCTION__.")"); //internal server error
         }
 
         return $id;
@@ -134,6 +133,26 @@
 
         //close the connection
         $conn->close();
+    }
+
+
+
+    function handleException($e) {
+        switch ($e->getMessage()) {
+            case 'handleStatementExecutionTrans::400':
+                sendResponseStatus(400);
+                //echo "Failed to add the Record: " . $stmt->error;
+                exit();
+                break;
+            
+            default:
+                sendResponseStatus(500);
+                echo "UNKOWN ERROR<br>";
+                echo $e->getMessage();
+                //echo "Failed to add the Record: " . $stmt->error;
+                exit();
+                break;
+        }
     }
 
 
@@ -246,25 +265,6 @@
         
     }
 
-    function handleException($e) {
-        switch ($e->getMessage()) {
-            case 'handleStatementExecutionTrans::400':
-                sendResponseStatus(400);
-                //echo "Failed to add the Record: " . $stmt->error;
-                exit();
-                break;
-            
-            default:
-                sendResponseStatus(500);
-                echo "UNKOWN ERROR<br>";
-                echo $e->getMessage();
-                //echo "Failed to add the Record: " . $stmt->error;
-                exit();
-                break;
-        }
-    }
-
-
     /**
      * adds new user in the database.
      */
@@ -355,9 +355,9 @@
 
         handleStatementExecutionTrans($stmt);
 
-        $sql = "select University_ID from University where name = ".$universityData["Name"].";";
+        $sql = "select University_ID from University where name = '".$universityData["Name"]."';";
         echo "<br>$sql<br>";
-        //$universityID = getSingleColumnTrans($conn, $sql, "University_ID");
+        $universityID = getSingleColumnTrans($conn, $sql, "University_ID");
         
         return $universityID;
 
@@ -386,8 +386,13 @@
             )"
         );
 
+        //query error
+        if(!$stmt) {
+            throw new \Exception("addNewUniversityProgramTrans::500"); //internal server error
+        }
+
         $stmt->bind_param(
-            "ssiisssidddssss",
+            "iisisds",
             $universityID, $program["Program_ID"], $program["Description"],
             $program["Fee_Total"], $program["Fee_Description"],  $program["MM_PCT"],
             $program["MM_PN"]
@@ -421,10 +426,10 @@
             $universityID = addNewUniversityTrans($conn, $requestData);
             
             echo  $universityID;
-            // //add new user registration request.
-            // foreach ($programs as $program) {
-            //     addNewUniversityProgramTrans($conn, $universityID, $program);
-            // }
+            //add new user registration request.
+            foreach ($programs as $program) {
+                addNewUniversityProgramTrans($conn, $universityID, $program);
+            }
             
             //commit transaction.
             $conn->commit();
