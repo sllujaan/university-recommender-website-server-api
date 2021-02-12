@@ -7,7 +7,11 @@
 
 
     function validateCreateSearchParams() {
-        if(empty($_POST["Name"])) {
+        if(
+            empty($_POST["Name"]) || !isset($_POST["Country_ID"]) ||
+            !isset($_POST["City_ID"]) || !isset($_POST["Program_ID"]) ||
+            !isset($_POST["budget_US_$"]) || !isset($_POST["MM_PCT"])
+        ) {
             sendResponseStatus(400);
             exit();
         }

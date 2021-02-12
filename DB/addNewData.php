@@ -447,4 +447,61 @@
         $conn->close();
     }
 
+
+
+    /**
+     * creates a new search
+     */
+    function createNewSearch($userID) {
+
+        //create new connection
+        $conn = initConnection();
+
+
+        $stmt = $conn->prepare(
+            "insert into Search(
+                `User_ID`,
+                `Name`,
+                `Country_ID`,
+                `City_ID`,
+                `Program_ID`,
+                `budget_US_$`,
+                `MM_PCT`
+            ) values (
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+            )"
+        );
+
+        //query error
+        if(!$stmt) {
+            sendResponseStatus(500);    //internal server error.
+            exit();
+        }
+
+        $stmt->bind_param(
+            "isiiiid",
+            $userID, $_POST["Name"], $_POST["Country_ID"],
+            $_POST["City_ID"], $_POST["Program_ID"], $_POST["budget_US_$"],
+            $_POST["MM_PCT"]
+        );
+
+
+        try {
+            handleStatementExecutionTrans($stmt);
+        }
+        catch(\Exception $e) {
+            handleException($e);
+        }
+
+        //close the connection
+        $conn->close();
+
+    }
+
 ?>
