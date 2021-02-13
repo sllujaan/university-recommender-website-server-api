@@ -475,20 +475,34 @@
                 ?,
                 ?,
                 ?
-            )"
+            );"
         );
 
         //query error
         if(!$stmt) {
             sendResponseStatus(500);    //internal server error.
+            echo "Failed to add the Record: " . $stmt->error;
             exit();
         }
 
+
+        //check empty values
+        $countryID = NULL;
+        $cityID = NULL;
+        $programID = NULL;
+        $Budget = NULL;
+        $MM_PCT = NULL;
+
+        if(!empty($_POST["Country_ID"])) $countryID = $_POST["Country_ID"];
+        if(!empty($_POST["City_ID"])) $cityID = $_POST["City_ID"];
+        if(!empty($_POST["Program_ID"])) $programID = $_POST["Program_ID"];
+        if(!empty($_POST["budget_US_$"])) $Budget = $_POST["budget_US_$"];
+        if(!empty($_POST["MM_PCT"])) $MM_PCT = $_POST["MM_PCT"];
+
         $stmt->bind_param(
             "isiiiid",
-            $userID, $_POST["Name"], $_POST["Country_ID"],
-            $_POST["City_ID"], $_POST["Program_ID"], $_POST["budget_US_$"],
-            $_POST["MM_PCT"]
+            $userID, $_POST["Name"], $countryID, $cityID,
+            $programID, $Budget, $MM_PCT
         );
 
 

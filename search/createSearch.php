@@ -13,7 +13,7 @@
 
     \CREAT_SEARCH_VALIDATOR\validateCreateSearchParams();
 
-    \DATABASE_ADD_NEW_DATA\createNewSearch($_POST["session_id"]);
+    \DATABASE_ADD_NEW_DATA\createNewSearch($_SESSION[$_POST["session_id"]]);
 
 
 ?>
