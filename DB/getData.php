@@ -306,14 +306,26 @@
         );
 
 
-        try {
-            \DATABASE_ADD_NEW_DATA\handleStatementExecutionTrans($stmt);
-        }
-        catch(\Exception $e) {
-            \DATABASE_ADD_NEW_DATA\handleException($e);
+        if(!$stmt->execute()) {
+            sendResponseStatus(500);    //internal server error.
+            echo "Failed to execute the statment: " . $stmt->error;
+            exit();
         }
 
+        $result = $stmt->get_result();
 
+        //no row found
+        if($result->num_rows === 0) {
+            sendResponseStatus(404);
+            exit();
+        }
+        
+        $Universities = array();
+        while($row = $result->fetch_assoc()) {
+            $Universities[] = $row;
+        }
+
+        return json_encode($Universities);
 
     }
 
@@ -332,7 +344,7 @@
         //create new connection
         $conn = initConnection();
 
-        handlePrepareStatement($conn, $regex);
+        echo handlePrepareStatement($conn, $regex);
 
         //close the connection
         $conn->close();
