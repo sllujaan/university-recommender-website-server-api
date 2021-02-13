@@ -17,6 +17,10 @@
         }
     }
 
+    function validateSearchParams() {
+        validateCreateSearchParams();
+    }
+
     
 
     /*

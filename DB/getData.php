@@ -231,4 +231,34 @@
         $conn->close();
     }
 
+
+    function prepareRegularExpression($arr) {
+        $regex = "";
+        foreach ($arr as $value) {
+            $regex .= "($value)|";
+        }
+        $regex = substr($regex, 0, -1);
+        return $regex;
+    }
+
+
+    /**
+     * performs university search
+    */
+    function performUniversitySerach() {
+        $searchNameArr = explode(" ", trim($_POST["Name"]));
+        print_r( $searchNameArr );
+
+        echo "<br>";
+
+        echo prepareRegularExpression($searchNameArr);
+
+
+    }
+
+
+
+
+
+
 ?>
