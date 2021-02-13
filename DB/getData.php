@@ -3,6 +3,7 @@
     include_once("validator.php");
     include_once("connection.php");
     include_once("../util/response.php");
+    include_once("addNewData.php");
 
     /**
      * retrives countries from the database.
@@ -241,6 +242,81 @@
         return $regex;
     }
 
+    function handlePrepareStatement($conn, $regex) {
+        //check empty values
+        $countryID = NULL;
+        $countryID_SQL = "";
+        $cityID = NULL;
+        $cityID_SQL = "";
+        $programID = NULL;
+        $programID_SQL = "";
+        $Budget = NULL;
+        $Budget_SQL = "";
+        $MM_PCT = NULL;
+        $MM_PCT_SQL = "";
+
+        if(!empty($_POST["Country_ID"])) {
+            $countryID = $_POST["Country_ID"];
+            $countryID_SQL = "and university.Country_ID = ? \r\n";
+        }
+
+        if(!empty($_POST["City_ID"])) {
+            $cityID = $_POST["City_ID"];
+            $countryID_SQL = "and university.City_ID = ? \r\n";
+        }
+
+        if(!empty($_POST["Program_ID"])){
+            $programID = $_POST["Program_ID"];
+            $countryID_SQL = "and university_program.Program_ID = ? \r\n";
+        }
+
+        if(!empty($_POST["budget_US_$"])) {
+            $Budget = $_POST["budget_US_$"];
+            $countryID_SQL = "and university_program.Fee_Total <= ? \r\n";
+        }
+
+        if(!empty($_POST["MM_PCT"])){
+            $MM_PCT = $_POST["MM_PCT"];
+            $countryID_SQL = "and university_program.MM_PCT <= ? \r\n";
+        }
+
+        $stmt = $conn->prepare(
+            "select * from university
+            inner join university_program
+            on university.University_ID = university_program.University_ID
+            
+            where (
+            university.Name regexp ?
+            or
+            university.Description regexp ?
+            
+            );"
+        );
+
+        //query error
+        if(!$stmt) {
+            sendResponseStatus(500);    //internal server error.
+            echo "Failed to add the Record: " . $stmt->error;
+            exit();
+        }
+
+
+        $stmt->bind_param(
+            "ss", $regex, $regex
+        );
+
+
+        try {
+            \DATABASE_ADD_NEW_DATA\handleStatementExecutionTrans($stmt);
+        }
+        catch(\Exception $e) {
+            \DATABASE_ADD_NEW_DATA\handleException($e);
+        }
+
+
+
+    }
+
 
     /**
      * performs university search
@@ -251,8 +327,15 @@
 
         echo "<br>";
 
-        echo prepareRegularExpression($searchNameArr);
+        $regex =  prepareRegularExpression($searchNameArr);
 
+        //create new connection
+        $conn = initConnection();
+
+        handlePrepareStatement($conn, $regex);
+
+        //close the connection
+        $conn->close();
 
     }
 
