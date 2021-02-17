@@ -409,7 +409,7 @@
     /**
      * retrieves universites form database;
      */
-    function getUniversities() {
+    function getUniversities($limit) {
         //create new connection
         $conn = initConnection();
 
@@ -419,13 +419,14 @@
         $TotalUniversities =  getSingleColumn($conn, $sql, "Total_Universities");
         $collectionArr[] = array(
             "Total_Universities" => (int)$TotalUniversities,
-            "Page_Number" => (int)1
+            "Page_Number" => (int)$_GET['page']
         );
 
         //sql query to retrieve universites
         $sql = "select University_ID, university.Name, Description, Country.Name as Name_Country from university 
-        inner join Country on university.Country_ID = Country.Country_ID;";
-        
+        inner join Country on university.Country_ID = Country.Country_ID
+        {$limit}
+        ;";
 
         $result = $conn->query($sql);
 
