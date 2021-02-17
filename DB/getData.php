@@ -466,4 +466,85 @@
 
 
 
+    /**
+     * retrieves university details form database;
+     */
+    function getUniversityDetails($id) {
+        //create new connection
+        $conn = initConnection();
+
+        $collectionArr = array();
+        //get total numbers of universities.
+        $sql = "select university.*, Country.Name as Name_Country, City.Name as Name_City
+                from university 
+                inner join Country on university.Country_ID = Country.Country_ID
+                inner join City on university.City_ID = City.City_ID
+                where university.University_ID = {$id}
+                ;";
+
+        $result = $conn->query($sql);
+
+        //check if there is any error in query
+        if(!$result) {
+            sendResponseStatus(500);
+            echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
+
+        //no row found
+        if($result->num_rows === 0) {
+            sendResponseStatus(404);
+            exit();
+        }
+
+
+        $University = NULL;
+        while($row = $result->fetch_assoc()) {
+            $University = $row;
+        }
+        $collectionArr[] = array("University" => $University);
+
+
+        //now retrieve programs
+
+        $sql = "select * from University_Program where University_ID = {$id};";
+        $result = $conn->query($sql);
+
+        //check if there is any error in query
+        if(!$result) {
+            sendResponseStatus(500);
+            echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
+
+        //no row found
+        if($result->num_rows === 0) {
+            sendResponseStatus(404);
+            exit();
+        }
+
+
+        $UniversityPrograms = array();
+        while($row = $result->fetch_assoc()) {
+            $UniversityPrograms[] = $row;
+        }
+            
+
+
+        $collectionArr[] = array("University_Program" => $UniversityPrograms);
+
+        
+
+
+        //close the connection
+        $conn->close();
+
+        return json_encode($collectionArr);
+    }
+
+
+
+
+
+
 ?>
