@@ -518,4 +518,55 @@
 
     }
 
+
+
+
+
+
+    /**
+     * updates new universiy in the database
+     */
+    function updateNewUniversityAndProgramsTrans() {
+
+        //\DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$_POST["session_id"]]);
+
+        //rest of the code....
+        $requestData = \UTIL\getRequestData();
+        $programs = $requestData["programs"];
+
+        //create new connection
+        $conn = initConnection();
+
+        try{
+
+            echo "<br>begining the transaction...<br>";
+            //First of all, let's begin a transaction
+            $conn->begin_transaction();
+
+            //add new user.
+            $universityID = addNewUniversityTrans($conn, $requestData);
+            
+            echo  $universityID;
+            //add new user registration request.
+            foreach ($programs as $program) {
+                addNewUniversityProgramTrans($conn, $universityID, $program);
+            }
+            
+            //commit transaction.
+            $conn->commit();
+
+            echo "<br>commited.<br>";
+
+        }
+        catch(\Exception $e) {
+            $conn->rollback();
+            echo "<br>rollbacked.<br>";
+            handleException($e);
+        }
+
+        //close the connection
+        $conn->close();
+    }
+
+
 ?>
