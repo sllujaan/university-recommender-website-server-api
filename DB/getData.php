@@ -3,7 +3,54 @@
     include_once("validator.php");
     include_once("connection.php");
     include_once("../util/response.php");
-    include_once("addNewData.php");
+
+
+
+
+    /**
+     * retrieves a single column from database
+     * from the given sql statement, connection and column name.
+     */
+    function getSingleColumn($conn, $sql, $columnName) {
+        $result = $conn->query($sql);
+
+        //in database there should be a record
+        if($result->num_rows !== 1) { 
+            sendResponseStatus(500);
+            //echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
+
+        $row = $result->fetch_assoc();
+        $id = $row[$columnName];
+        //check that id is not empty. make sure the columnName is correct
+        if(empty($id)) {
+            sendResponseStatus(500);
+            exit();
+        }
+
+        return $id;
+    }
+
+
+    function getSingleColumnTrans($conn, $sql, $columnName) {
+        $result = $conn->query($sql);
+
+        //in database there should be a record
+        if($result->num_rows !== 1) {
+            throw new \Exception("Failed to Retrieve the Record: " . $conn->error . " (FUN: ".__FUNCTION__.")");
+
+        }
+
+        $row = $result->fetch_assoc();
+        $id = $row[$columnName];
+        //check that id is not empty. make sure the columnName is correct
+        if(empty($id)) {
+            throw new \Exception("getSingleColumnTrans::500" . $conn->error . " (FUN: ".__FUNCTION__.")"); //internal server error
+        }
+
+        return $id;
+    }
 
     /**
      * retrives countries from the database.
@@ -171,10 +218,12 @@
             $Users[] = $row;
         }
 
-        return json_encode($Users);
-
         //close the connection
         $conn->close();
+
+        return json_encode($Users);
+
+        
     }
 
 
@@ -244,25 +293,20 @@
 
     function handlePrepareStatement($conn, $regex) {
         //check empty values
-        $countryID = NULL;
-        $countryID_SQL = "";
-        $cityID = NULL;
-        $cityID_SQL = "";
-        $programID = NULL;
-        $programID_SQL = "";
-        $Budget = NULL;
-        $Budget_SQL = "";
-        $MM_PCT = NULL;
-        $MM_PCT_SQL = "";
+        $defaultID_regex = "\d*";
+        $countryID_regex = $defaultID_regex;
+        $cityID_regex = $defaultID_regex;
+        $programID_regex = $defaultID_regex;
+        $Budget_regex = $defaultID_regex;
+        $MM_PCT_regex = $defaultID_regex;
 
         if(!empty($_POST["Country_ID"])) {
-            $countryID = $_POST["Country_ID"];
-            $countryID_SQL = "and university.Country_ID = ? \r\n";
+            $countryID_regex = "\\b" . $_POST["Country_ID"] . "\\b";
         }
 
         if(!empty($_POST["City_ID"])) {
             $cityID = $_POST["City_ID"];
-            $countryID_SQL = "and university.City_ID = ? \r\n";
+            $cityID_SQL = "and university.City_ID = ? \r\n";
         }
 
         if(!empty($_POST["Program_ID"])){
@@ -280,6 +324,8 @@
             $countryID_SQL = "and university_program.MM_PCT <= ? \r\n";
         }
 
+        $constraints = $countryID_SQL . $cityID_SQL;
+
         $stmt = $conn->prepare(
             "select * from university
             inner join university_program
@@ -289,20 +335,29 @@
             university.Name regexp ?
             or
             university.Description regexp ?
-            
-            );"
+            )
+
+            and university.Country_ID regexp ?
+            and university.Country_ID regexp ?
+            and university_program.Program_ID regexp ?
+            and university.Start_Admission_Date <= (? + interval 1 month)
+            and university.End_Admission_Date >= ?
+            and university_program.Fee_Total <= ?
+
+            group by university.University_ID
+            ;"
         );
 
         //query error
         if(!$stmt) {
             sendResponseStatus(500);    //internal server error.
-            echo "Failed to add the Record: " . $stmt->error;
+            echo "Failed to prepare the statment: " . $stmt->error;
             exit();
         }
 
 
         $stmt->bind_param(
-            "ss", $regex, $regex
+            "sss", $regex, $regex, $countryID_regex
         );
 
 
@@ -335,9 +390,6 @@
     */
     function performUniversitySerach() {
         $searchNameArr = explode(" ", trim($_POST["Name"]));
-        print_r( $searchNameArr );
-
-        echo "<br>";
 
         $regex =  prepareRegularExpression($searchNameArr);
 
@@ -349,6 +401,63 @@
         //close the connection
         $conn->close();
 
+    }
+
+
+
+    
+    /**
+     * retrieves universites form database;
+     */
+    function getUniversities() {
+        //create new connection
+        $conn = initConnection();
+
+        $collectionArr = array();
+        //get total numbers of universities.
+        $sql = "select count(University_ID) as Total_Universities from university;";
+        $TotalUniversities =  getSingleColumn($conn, $sql, "Total_Universities");
+        $collectionArr[] = array(
+            "Total_Universities" => (int)$TotalUniversities,
+            "Page_Number" => (int)1
+        );
+
+        //sql query to retrieve universites
+        $sql = "select University_ID, university.Name, Description, Country.Name as Name_Country from university 
+        inner join Country on university.Country_ID = Country.Country_ID;";
+        
+
+        $result = $conn->query($sql);
+
+        //check if there is any error in query
+        if(!$result) {
+            sendResponseStatus(500);
+            echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
+
+        //no row found
+        if($result->num_rows === 0) {
+            sendResponseStatus(404);
+            exit();
+        }
+
+
+        $Universities = array();
+        while($row = $result->fetch_assoc()) {
+            $Universities[] = $row;
+        }
+
+
+        $collectionArr[] = $Universities;
+
+        
+
+
+        //close the connection
+        $conn->close();
+
+        return json_encode($collectionArr);
     }
 
 
