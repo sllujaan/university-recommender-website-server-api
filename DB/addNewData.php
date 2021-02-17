@@ -521,12 +521,52 @@
 
 
 
+    function UpdateNewUniversityTrans($conn, $universityData) {
 
+        $stmt = $conn->prepare(
+            "update university
+            set
+            `Name` = ?,
+            `Description` = ?,
+            `Country_ID` = ?,
+            `City_ID` = ?,
+            `Admission_Criteria` = ?,
+            `Start_Admission_Date` = ?,
+            `End_Admission_Date` = ?,
+            `Total_ETM` = ?,
+            `S_Education_MC_PCT` = ?,
+            `H_Education_MC_PCT` = ?,
+            `PCT_MC_ETM` = ?,
+            `Phone` = ?,
+            `Web_Link` = ?,
+            `Email` = ?,
+            `Address` = ?
+            where University_ID = 1
+            ;"
+        );
+
+        $stmt->bind_param(
+            "ssiisssidddssss",
+            $universityData["Name"], $universityData["Description"], $universityData["Country_ID"],
+            $universityData["City_ID"], $universityData["Admission_Criteria"], $universityData["Start_Admission_Date"],
+            $universityData["End_Admission_Date"], $universityData["Total_ETM"], $universityData["S_Education_MC_PCT"],
+            $universityData["H_Education_MC_PCT"], $universityData["PCT_MC_ETM"], $universityData["Phone"],
+            $universityData["Web_Link"], $universityData["Email"], $universityData["Address"]
+        );
+
+        //query error
+        if(!$stmt) {
+            throw new \Exception("updateNewUniversityTrans::500"); //internal server error
+        }
+
+        handleStatementExecutionTrans($stmt);
+
+    }
 
     /**
      * updates new universiy in the database
      */
-    function updateNewUniversityAndProgramsTrans() {
+    function updateNewUniversityAndProgramsTrans($universityID) {
 
         //\DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$_POST["session_id"]]);
 
@@ -544,13 +584,12 @@
             $conn->begin_transaction();
 
             //add new user.
-            $universityID = addNewUniversityTrans($conn, $requestData);
+            UpdateNewUniversityTrans($conn, $requestData);
             
-            echo  $universityID;
             //add new user registration request.
-            foreach ($programs as $program) {
-                addNewUniversityProgramTrans($conn, $universityID, $program);
-            }
+            // foreach ($programs as $program) {
+            //     addNewUniversityProgramTrans($conn, $universityID, $program);
+            // }
             
             //commit transaction.
             $conn->commit();
