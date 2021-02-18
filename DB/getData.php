@@ -571,6 +571,8 @@
         ";
 
 
+        $result = $conn->query($sql);
+        
         //check if there is any error in query
         if(!$result) {
             sendResponseStatus(500);
@@ -592,7 +594,7 @@
 
         //close the connection
         $conn->close();
-        
+
         return json_encode($Universities);
     }
 
