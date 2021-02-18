@@ -316,7 +316,7 @@
         }
 
         if(!empty($_POST["Start_Admission_Date"])){
-            $Start_Admission_Date = "\\b" . $_POST["Start_Admission_Date"] . "\\b";
+            $Start_Admission_Date = $_POST["Start_Admission_Date"];
             $End_Admission_Date = $Start_Admission_Date;
         }
 
@@ -362,7 +362,9 @@
 
 
         $stmt->bind_param(
-            "sssssssid", $regex, $regex, $countryID_regex
+            "sssssssid", $regex, $regex, $countryID_regex, $cityID_regex,
+            $programID_regex, $Start_Admission_Date, $End_Admission_Date, $Budget,
+            $MM_PCT
         );
 
 
@@ -400,6 +402,9 @@
 
         //create new connection
         $conn = initConnection();
+
+
+
 
         echo handlePrepareStatement($conn, $regex);
 
