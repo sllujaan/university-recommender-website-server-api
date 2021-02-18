@@ -293,35 +293,39 @@
 
     function handlePrepareStatement($conn, $regex) {
         //check empty values
-        $defaultID_regex = "\d*";
+        $defaultID_regex = "\\b\d*\\b";
         $countryID_regex = $defaultID_regex;
         $cityID_regex = $defaultID_regex;
         $programID_regex = $defaultID_regex;
-        $Budget_regex = $defaultID_regex;
-        $MM_PCT_regex = $defaultID_regex;
+        $Start_Admission_Date = "9998-01-01";
+        $End_Admission_Date = "0000-01-01";
+        $Budget = 2147483647;
+        $MM_PCT = 1;
+        
 
         if(!empty($_POST["Country_ID"])) {
             $countryID_regex = "\\b" . $_POST["Country_ID"] . "\\b";
         }
 
         if(!empty($_POST["City_ID"])) {
-            $cityID = $_POST["City_ID"];
-            $cityID_SQL = "and university.City_ID = ? \r\n";
+            $cityID_regex = "\\b" . $_POST["City_ID"] . "\\b";
         }
 
         if(!empty($_POST["Program_ID"])){
-            $programID = $_POST["Program_ID"];
-            $countryID_SQL = "and university_program.Program_ID = ? \r\n";
+            $programID_regex = "\\b" . $_POST["Program_ID"] . "\\b";
+        }
+
+        if(!empty($_POST["Start_Admission_Date"])){
+            $Start_Admission_Date = "\\b" . $_POST["Start_Admission_Date"] . "\\b";
+            $End_Admission_Date = $Start_Admission_Date;
         }
 
         if(!empty($_POST["budget_US_$"])) {
             $Budget = $_POST["budget_US_$"];
-            $countryID_SQL = "and university_program.Fee_Total <= ? \r\n";
         }
 
         if(!empty($_POST["MM_PCT"])){
             $MM_PCT = $_POST["MM_PCT"];
-            $countryID_SQL = "and university_program.MM_PCT <= ? \r\n";
         }
 
         $constraints = $countryID_SQL . $cityID_SQL;
@@ -343,6 +347,7 @@
             and university.Start_Admission_Date <= (? + interval 1 month)
             and university.End_Admission_Date >= ?
             and university_program.Fee_Total <= ?
+            and university_program.MM_PCT <= ?
 
             group by university.University_ID
             ;"
@@ -357,7 +362,7 @@
 
 
         $stmt->bind_param(
-            "sss", $regex, $regex, $countryID_regex
+            "sssssssid", $regex, $regex, $countryID_regex
         );
 
 
@@ -572,7 +577,7 @@
 
 
         $result = $conn->query($sql);
-        
+
         //check if there is any error in query
         if(!$result) {
             sendResponseStatus(500);
