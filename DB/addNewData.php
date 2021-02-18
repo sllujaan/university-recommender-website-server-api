@@ -608,4 +608,76 @@
     }
 
 
+
+    /**
+     * accepts user registration request
+     */
+    function AcceptRequest($userID) {
+        //create new connection
+        $conn = initConnection();
+
+        $stmt = $conn->prepare(
+            "update User
+            set Account_Status_ID = (select (Account_Status_ID) from Account_Status where Name = 'approved')
+            where User_ID = ?;"
+        );
+
+        $stmt->bind_param("i", $userID);
+
+
+        //query error
+        if(!$stmt) {
+            sendResponseStatus(500);
+            echo "Failed to update the Record: " . $conn->error;
+            exit();
+        }
+
+        try {
+            handleStatementExecutionTrans($stmt);
+        }
+        catch(\Exception $e) {
+            handleException($e);
+        }
+
+        //close the connection
+        $conn->close();
+    }
+
+
+    
+    /**
+     * rejects user registration request
+     */
+    function RejectRequest($userID) {
+        //create new connection
+        $conn = initConnection();
+
+        $stmt = $conn->prepare(
+            "update User
+            set Account_Status_ID = (select (Account_Status_ID) from Account_Status where Name = 'rejected')
+            where User_ID = ?;"
+        );
+
+        $stmt->bind_param("i", $userID);
+
+
+        //query error
+        if(!$stmt) {
+            sendResponseStatus(500);
+            echo "Failed to update the Record: " . $conn->error;
+            exit();
+        }
+
+        try {
+            handleStatementExecutionTrans($stmt);
+        }
+        catch(\Exception $e) {
+            handleException($e);
+        }
+
+        //close the connection
+        $conn->close();
+    }
+
+
 ?>
