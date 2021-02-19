@@ -47,6 +47,7 @@
             empty($requestData["Admission_Criteria"]) || empty($requestData["Start_Admission_Date"]) ||
             empty($requestData["End_Admission_Date"]) || empty($requestData["Total_ETM"]) ||
             empty($requestData["S_Education_MC_PCT"]) || empty($requestData["H_Education_MC_PCT"]) ||
+            empty($requestData["PCT_MC_ETM"]) ||
             !isset($requestData["Phone"]) || !isset($requestData["Web_Link"]) || !isset($requestData["Email"]) ||
             empty($requestData["Address"])
         ) {

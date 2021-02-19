@@ -616,6 +616,10 @@
         //create new connection
         $conn = initConnection();
 
+        //verfiy the user is admin
+        \DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$_POST["session_id"]]);
+        
+
         $stmt = $conn->prepare(
             "update User
             set Account_Status_ID = (select (Account_Status_ID) from Account_Status where Name = 'approved')
@@ -651,6 +655,10 @@
     function RejectRequest($userID) {
         //create new connection
         $conn = initConnection();
+
+
+        //verfiy the user is admin
+        \DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$_POST["session_id"]]);
 
         $stmt = $conn->prepare(
             "update User

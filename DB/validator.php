@@ -79,13 +79,19 @@
      */
     function verifyAdmin($conn, $userID) {
 
-        $sql = "select * from User inner join Role
+
+        $stmt = $conn->prepare("select * from User inner join Role
         on User.Role_ID = Role.Role_ID
         and Role.Name = 'admin'
-        and User.User_ID = " . $userID . ";";
+        and User.User_ID = ?;");
+        $stmt->bind_param("i", $userID);
 
-
-        $result = $conn->query($sql);
+        if(!$stmt->execute()) {
+            sendResponseStatus(500);
+            //echo "Failed to Retrieve the Record: " . $stmt->error;
+            exit();
+        }
+        $result = $stmt->get_result();
 
         //in database there should be only one admin
         if($result->num_rows !== 1) { 
