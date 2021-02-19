@@ -1,0 +1,27 @@
+
+
+
+{
+	"session_id": "de51387a6e9092303351ca0b6f643c05",
+	"user_id": 1,
+	"University_ID": 2,
+	"Name": "punjab university 1",
+	"Description": "punjab description 1",
+	"Country_ID": "22",
+	"City_ID": "22",
+	"Admission_Criteria": "90% marks",
+	"Start_Admission_Date": "2021-01-09",
+	"End_Admission_Date": "2021-02-09",
+	"Total_ETM": "12",
+	"S_Education_MC_PCT": "1",
+	"H_Education_MC_PCT": "1",
+	"PCT_MC_ETM": "1",
+	"Phone": "12",
+	"Web_Link": "",
+	"Email": "",
+	"Address": "12",
+	"programs": [
+		{"Program_ID": "1", "Description": "CS1", "Fee_Total": "500", "Fee_Description": "CS1", "MM_PCT": "CS1", "MM_PN": "CS1"},
+		{"Program_ID": "2", "Description": "CS2", "Fee_Total": "500", "Fee_Description": "CS2", "MM_PCT": "CS1", "MM_PN": "CS2"}
+	]
+}

@@ -42,6 +42,7 @@
         }
 
         if(
+            empty($requestData["University_ID"]) ||
             empty($requestData["Name"]) || empty($requestData["Description"]) ||
             empty($requestData["Country_ID"]) || empty($requestData["City_ID"]) ||
             empty($requestData["Admission_Criteria"]) || empty($requestData["Start_Admission_Date"]) ||
@@ -63,7 +64,7 @@
 
         validateProgramsParams($requestData["programs"]);
 
-
+        return $requestData["University_ID"];
 
     }
 

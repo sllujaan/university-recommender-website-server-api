@@ -544,17 +544,18 @@
             `Web_Link` = ?,
             `Email` = ?,
             `Address` = ?
-            where University_ID = 1
+            where University_ID = ?
             ;"
         );
 
         $stmt->bind_param(
-            "ssiisssidddssss",
+            "ssiisssidddssssi",
             $universityData["Name"], $universityData["Description"], $universityData["Country_ID"],
             $universityData["City_ID"], $universityData["Admission_Criteria"], $universityData["Start_Admission_Date"],
             $universityData["End_Admission_Date"], $universityData["Total_ETM"], $universityData["S_Education_MC_PCT"],
             $universityData["H_Education_MC_PCT"], $universityData["PCT_MC_ETM"], $universityData["Phone"],
-            $universityData["Web_Link"], $universityData["Email"], $universityData["Address"]
+            $universityData["Web_Link"], $universityData["Email"], $universityData["Address"],
+            $universityData["University_ID"]
         );
 
         //query error
@@ -569,7 +570,7 @@
     /**
      * updates new universiy in the database
      */
-    function updateNewUniversityAndProgramsTrans($universityID) {
+    function updateNewUniversityAndProgramsTrans() {
 
         //rest of the code....
         $requestData = \UTIL\getRequestData();
@@ -578,7 +579,9 @@
         //create new connection
         $conn = initConnection();
 
-        //\DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$requestData["session_id"]]);
+        //vervify that the user is admin
+        \DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$requestData["session_id"]]);
+
 
         try{
 
