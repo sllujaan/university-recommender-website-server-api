@@ -86,7 +86,7 @@
 
     //data in coming through request body
     function validateSession_BODY() {
-        $requestData = getRequestData();
+        $requestData = \UTIL\getRequestData();
         $session_id = $requestData["session_id"];
         $user_id = $requestData["user_id"];
         validateSession($session_id, $user_id);

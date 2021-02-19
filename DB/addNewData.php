@@ -416,6 +416,9 @@
         //create new connection
         $conn = initConnection();
 
+        //vervify that the user is admin
+        \DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$requestData["session_id"]]);
+
         try{
 
             echo "<br>begining the transaction...<br>";
@@ -568,14 +571,14 @@
      */
     function updateNewUniversityAndProgramsTrans($universityID) {
 
-        //\DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$_POST["session_id"]]);
-
         //rest of the code....
         $requestData = \UTIL\getRequestData();
         $programs = $requestData["programs"];
 
         //create new connection
         $conn = initConnection();
+
+        //\DATABASE_VALIDATOR\verifyAdmin($conn, $_SESSION[$requestData["session_id"]]);
 
         try{
 

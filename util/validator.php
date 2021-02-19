@@ -17,7 +17,7 @@
      * credentials are coming through request body.
      */
     function validateAuthParams_BODY() {
-        $reqestData = getRequestData();
+        $reqestData = \UTIL\getRequestData();
         if(empty($reqestData["session_id"]) || empty($reqestData["user_id"])) {
             sendResponseStatus(400);
             exit();
