@@ -27,6 +27,10 @@
                 return prepareMsg("Conflict", $msg);
             case 500:
                 return prepareMsg("Internal Server Error", "Please contact to Administrator!");
+            case 201:
+                return prepareMsg("Request Created (Already)", "The Registration Request is in Progress!");
+            case 410:
+                return prepareMsg("Gone", "The Registration Request was Rejected!");
             default:
                 return "";
                 break;

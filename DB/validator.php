@@ -19,15 +19,25 @@
 
 
     function handleRequestStatus($requestStatus) {
-        
+        switch ((string)$requestStatus) {
+            case 'pending':
+                sendResponseStatus(201);    //created
+                exit();
+                break;
+            case 'rejected':
+                sendResponseStatus(410);    //Gone
+                exit();
+                break;
+            default:
+                # code...
+                break;
+        }
     }
 
     /**
      * verifies user account status (i.e. user is approved.)
      */
     function verifyUserApproved($conn, $UserID) {
-
-        echo $UserID;
 
         $stmt = $conn->prepare("
             select User.User_ID, Account_Status.Name as Request_Status from User
@@ -47,8 +57,6 @@
 
         $result = $stmt->get_result();
 
-        echo $result->num_rows;
-
         if($result->num_rows !== 1) { 
             sendResponseStatus(500);
            //echo "Failed to fetch the Record: " . $stmt->error;
@@ -57,7 +65,7 @@
 
         $row = $result->fetch_assoc();
 
-        print_r($row);
+        handleRequestStatus($row["Request_Status"]);
                 
     }
 
