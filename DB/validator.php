@@ -17,6 +17,50 @@
         return $row["User_ID"];
     }
 
+
+    function handleRequestStatus($requestStatus) {
+        
+    }
+
+    /**
+     * verifies user account status (i.e. user is approved.)
+     */
+    function verifyUserApproved($conn, $UserID) {
+
+        echo $UserID;
+
+        $stmt = $conn->prepare("
+            select User.User_ID, Account_Status.Name as Request_Status from User
+            inner join Account_Status
+            on User.Account_Status_ID = Account_Status.Account_Status_ID
+            where User.User_ID = ?;
+            ");
+        
+
+        $stmt->bind_param("i", $UserID);
+
+        if(!$stmt->execute()) {
+            sendResponseStatus(500);
+            //echo "Failed to fetch the Record: " . $stmt->error;
+            exit();
+        }
+
+        $result = $stmt->get_result();
+
+        echo $result->num_rows;
+
+        if($result->num_rows !== 1) { 
+            sendResponseStatus(500);
+           //echo "Failed to fetch the Record: " . $stmt->error;
+            exit();
+        }
+
+        $row = $result->fetch_assoc();
+
+        print_r($row);
+                
+    }
+
     /**
      * verifies if the user exits in the database.
      */
@@ -28,7 +72,11 @@
 
         // set parameters and execute
         $pName = $name;
-        $stmt->execute();
+        if(!$stmt->execute()) {
+            sendResponseStatus(500);
+            //echo "Failed to add the Record: " . $stmt->error;
+            exit();
+        }
         $result = $stmt->get_result();
 
         //if user found there should be only one row
@@ -39,6 +87,10 @@
 
         //verify password
         $userID = verifyPassword($result, $password);
+
+        //verify user account (i.e. the user is approved)
+        verifyUserApproved($conn, $userID);
+
         //close the connection
         $conn->close();
         return $userID;
