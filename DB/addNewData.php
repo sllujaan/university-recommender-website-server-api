@@ -51,6 +51,9 @@
         return $id;
     }
 
+
+    
+
     /**
      * 
      * adds new user in the database.
@@ -401,6 +404,38 @@
         handleStatementExecutionTrans($stmt);
     }
 
+
+
+    function updateUniversityProgramTrans($conn, $universityID, $program) {
+        
+        $stmt = $conn->prepare(
+            "update University_Program
+            set
+                `Program_ID` = ?,
+                `Description` = ?,
+                `Fee_Total` = ?,
+                `Fee_Description` = ?,
+                `MM_PCT` = ?,
+                `MM_PN` = ?
+                where `University_ID` = ?
+            ;"
+        );
+
+        //query error
+        if(!$stmt) {
+            throw new \Exception("updateUniversityProgramTrans::500"); //internal server error
+        }
+
+        $stmt->bind_param(
+            "isisdsi",
+            $program["Program_ID"], $program["Description"],
+            $program["Fee_Total"], $program["Fee_Description"],  $program["MM_PCT"],
+            $program["MM_PN"], $universityID
+        );
+
+        handleStatementExecutionTrans($stmt);
+    }
+
     
     /**
      * adds new universiy in the database
@@ -524,7 +559,7 @@
 
 
 
-    function UpdateNewUniversityTrans($conn, $universityData) {
+    function UpdateUniversityTrans($conn, $universityData) {
 
         $stmt = $conn->prepare(
             "update university
@@ -560,11 +595,28 @@
 
         //query error
         if(!$stmt) {
-            throw new \Exception("updateNewUniversityTrans::500"); //internal server error
+            throw new \Exception("updateUniversityTrans::500"); //internal server error
         }
 
         handleStatementExecutionTrans($stmt);
 
+    }
+
+
+
+    function deleteProgramsTrans($conn, $universityID) {
+
+        $stmt = $conn->prepare("
+        delete from University_Program where University_ID = ?;
+        ");
+        $stmt->bind_param("i", $universityID);
+
+        //query error
+        if(!$stmt) {
+            throw new \Exception("updateUniversityTrans::500"); //internal server error
+        }
+
+        handleStatementExecutionTrans($stmt);
     }
 
     /**
@@ -575,6 +627,7 @@
         //rest of the code....
         $requestData = \UTIL\getRequestData();
         $programs = $requestData["programs"];
+        $universityID = $requestData["University_ID"];
 
         //create new connection
         $conn = initConnection();
@@ -590,12 +643,15 @@
             $conn->begin_transaction();
 
             //add new user.
-            UpdateNewUniversityTrans($conn, $requestData);
+            UpdateUniversityTrans($conn, $requestData);
+
+            //delete the existing programs
+            deleteProgramsTrans($conn, $universityID);
             
             //add new user registration request.
-            // foreach ($programs as $program) {
-            //     addNewUniversityProgramTrans($conn, $universityID, $program);
-            // }
+            foreach ($programs as $program) {
+                addNewUniversityProgramTrans($conn, $universityID, $program);
+            }
             
             //commit transaction.
             $conn->commit();
@@ -692,6 +748,10 @@
         //close the connection
         $conn->close();
     }
+
+
+
+
 
 
 ?>
