@@ -609,6 +609,40 @@
     }
 
 
+    function getSavesSearches($UserID) {
+        //create new connection
+        $conn = initConnection();
+
+        //sql query to retrieve users
+        $sql = "select * from search where User_ID = {$UserID};";
+
+        $result = $conn->query($sql);
+
+        //check if there is any error in query
+        if(!$result) {
+            sendResponseStatus(500);
+            echo "Failed to Retrieve the Record: " . $conn->error;
+            exit();
+        }
+
+        //no row found
+        if($result->num_rows === 0) {
+            sendResponseStatus(404);
+            exit();
+        }
+
+        $savedSearches = array();
+        while($row = $result->fetch_assoc()) {
+            $savedSearches[] = $row;
+        }
+
+        return json_encode($savedSearches);
+
+        //close the connection
+        $conn->close();
+    }
+
+
 
 
 ?>
