@@ -517,7 +517,10 @@
 
         //now retrieve programs
 
-        $sql = "select * from University_Program where University_ID = {$id};";
+        $sql = "select * from University_Program
+                inner join Program on Program.Program_id = University_Program.Program_id
+                where University_ID = {$id};";
+
         $result = $conn->query($sql);
 
         //check if there is any error in query
