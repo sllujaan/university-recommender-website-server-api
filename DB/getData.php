@@ -252,7 +252,9 @@
                 inner join Account_Status on User.Account_Status_ID = Account_Status.Account_Status_ID
                 inner join Country on User.Country_ID = Country.Country_ID
                 inner join City on User.City_ID = City.City_ID
-                inner join Program on User.Program_ID = Program.Program_ID;
+                inner join Program on User.Program_ID = Program.Program_ID
+                where Account_Status.Name = 'pending'
+                ;
                 ";
         
 
