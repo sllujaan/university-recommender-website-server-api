@@ -238,7 +238,8 @@
 
         //sql query to retrieve users
         $sql = "
-                select 
+                select
+                User.User_ID, 
                 User.Name as Name, User.Email as Email, User.Start_Admission_Date as User_Start_Admission_Date,
                 User.S_Education_PCT as User_S_Education_PCT, User.H_Education_PCT as User_H_Education_PCT,
                 User.ETM_PCT as User_ETM_PCT, User.Budget_US_$ as User_Budget_US_$,
