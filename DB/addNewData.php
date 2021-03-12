@@ -368,17 +368,33 @@
 
     function addNewUniversityProgramTrans($conn, $universityID, $program) {
         
+        $totalFee;
+
         $stmt = $conn->prepare(
             "insert into University_Program (
                 `University_ID`,
                 `Program_ID`,
                 `Description`,
+                `Admission_Fee`,
+                `Registration_Fee`,
+                `Security_Fee`,
+                `Admission_Processing_Fee`,
+                `Enrollment_Fee_Per_Semester`,
+                `Tuition_Fee_per_Credit_Hour`,
+                `Convocation_Fee`,
                 `Fee_Total`,
                 `Fee_Description`,
                 `MM_PCT`,
                 `MM_PN`
             )
             values(
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
                 ?,
                 ?,
                 ?,
@@ -395,9 +411,12 @@
         }
 
         $stmt->bind_param(
-            "iisisds",
+            "iisiiiiiiiisds",
             $universityID, $program["Program_ID"], $program["Description"],
-            $program["Fee_Total"], $program["Fee_Description"],  $program["MM_PCT"],
+            $program["Program_ID"], $program["Description"], $program["Program_ID"],
+            $program["Program_ID"], $program["Description"], $program["Program_ID"],
+            $program["Program_ID"],
+            $totalFee, $program["Fee_Description"],  $program["MM_PCT"],
             $program["MM_PN"]
         );
 
