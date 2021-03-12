@@ -413,12 +413,16 @@
         $stmt->bind_param(
             "iisiiiiiiiisds",
             $universityID, $program["Program_ID"], $program["Description"],
-            $program["Program_ID"], $program["Description"], $program["Program_ID"],
-            $program["Program_ID"], $program["Description"], $program["Program_ID"],
-            $program["Program_ID"],
+            $program["Admission_Fee"], $program["Registration_Fee"], $program["Security_Fee"],
+            $program["Admission_Processing_Fee"], $program["Enrollment_Fee_Per_Semester"], $program["Tuition_Fee_per_Credit_Hour"],
+            $program["Convocation_Fee"],
             $totalFee, $program["Fee_Description"],  $program["MM_PCT"],
             $program["MM_PN"]
         );
+
+        $totalFee = $program["Admission_Fee"] + $program["Registration_Fee"] + $program["Security_Fee"] +
+        $program["Admission_Processing_Fee"] + $program["Enrollment_Fee_Per_Semester"] + $program["Tuition_Fee_per_Credit_Hour"] +
+        $program["Convocation_Fee"];
 
         handleStatementExecutionTrans($stmt);
     }

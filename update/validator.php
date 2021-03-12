@@ -20,7 +20,13 @@
         foreach ($programsArr as $program) {
             if(
                 empty($program["Program_ID"]) ||
-                empty($program["Description"]) || empty($program["Fee_Total"]) ||
+                empty($program["Description"]) ||
+                
+                !isset($program["Admission_Fee"]) || !isset($program["Registration_Fee"]) ||
+                !isset($program["Security_Fee"]) || !isset($program["Admission_Processing_Fee"]) ||
+                !isset($program["Enrollment_Fee_Per_Semester"]) || !isset($program["Tuition_Fee_per_Credit_Hour"]) ||
+                !isset($program["Convocation_Fee"]) ||
+                
                 empty($program["Fee_Description"]) || empty($program["MM_PCT"]) ||
                 empty($program["MM_PN"])
             ) {
