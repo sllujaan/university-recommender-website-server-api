@@ -206,6 +206,31 @@
 
 
     /**
+     * validates if university name exists in the database.
+     */
+    function validateUniversityName() {
+        //create new connection
+        $conn = initConnection();
+
+        //sql query to retrieve users
+        $stmt = $conn->prepare("SELECT University_ID FROM University WHERE Name = ?;");
+
+        //query error
+        if(!$stmt) {
+            sendResponseStatus(500);
+            exit();
+        }
+
+        $stmt->bind_param("s", $_POST["name"]);
+
+        handleStatementExecution($stmt);
+
+        //close the connection
+        $conn->close();
+    }
+
+
+    /**
      * validates if user email exists in the database.
      */
     function validateUserEmail() {

@@ -74,6 +74,18 @@
 
     }
 
+
+
+    /**
+     * Validates if university name is present in the incoming request.
+     */
+    function validateUniversityNameParam() {
+        if(empty($_POST["name"])) {
+            sendResponseStatus(400);
+            exit();
+        }
+    }
+
     
 
 
