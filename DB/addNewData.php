@@ -163,6 +163,7 @@
         define("DUPLICATE_KEY", 1062);
         if(!$stmt->execute()) {
             if((int)$stmt->errno === DUPLICATE_KEY) {
+                echo $stmt->error;
                 throw new \Exception("handleStatementExecutionTrans::400"); //bad request
                 // sendResponseStatus(400);
                 // //echo "Failed to add the Record: " . $stmt->error;
@@ -402,7 +403,7 @@
                 ?,
                 ?,
                 ?
-            )"
+            );"
         );
 
         //query error
@@ -487,7 +488,7 @@
             $universityID = addNewUniversityTrans($conn, $requestData);
             
             echo  $universityID;
-            //add new user registration request.
+
             foreach ($programs as $program) {
                 addNewUniversityProgramTrans($conn, $universityID, $program);
             }

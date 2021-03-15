@@ -403,6 +403,11 @@
 
         $regex =  prepareRegularExpression($searchNameArr);
 
+        print_r($searchNameArr);
+        echo $regex;
+
+        echo "<br><br>";
+
         //create new connection
         $conn = initConnection();
 
