@@ -569,24 +569,22 @@
     function getRecommendedUniversities($UserID) {
         //create new connection
         $conn = initConnection();
+        
 
         $sql = "
-        select * from university
+        select university.University_ID, university.Name,
+        university.Description, Country.Name as CountryName
+        from university
             inner join university_program
             on university.University_ID = university_program.University_ID
+            inner join Country
+            on university.Country_ID = Country.Country_ID
             inner join User
             on
                 university.Country_ID = (select (Country_ID) from User where User_ID = {$UserID})
-                and university.City_ID = (select (City_ID) from User where User_ID = {$UserID})
                 and university_program.Program_ID = (select (Program_ID) from User where User_ID = {$UserID})
-                and university.Start_Admission_Date <= ((select (Start_Admission_Date) from User where User_ID = {$UserID}) + interval 1 month)
-                and university.End_Admission_Date >= (select (Start_Admission_Date) from User where User_ID = {$UserID})
                 and university_program.Fee_Total <= (select (Budget_US_$) from User where User_ID = {$UserID})
-                and university.S_Education_MC_PCT <= (select (S_Education_PCT) from User where User_ID = {$UserID})
-                and university.H_Education_MC_PCT <= (select (H_Education_PCT) from User where User_ID = {$UserID})
-                and university.PCT_MC_ETM  <= (select (ETM_PCT) from User where User_ID = {$UserID})
                 
-
             group by university.University_ID
             ;
         ";
