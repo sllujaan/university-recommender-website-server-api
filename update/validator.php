@@ -1,6 +1,6 @@
 <?php
 
-    namespace NEW_UNIVERSITY_VALIDATOR;
+    namespace UPDATE_UNIVERSITY_VALIDATOR;
     include_once("../util/util.php");
     include_once("../util/response.php");
 
@@ -48,12 +48,12 @@
         }
 
         if(
+            empty($requestData["University_ID"]) ||
             empty($requestData["Name"]) || empty($requestData["Description"]) ||
             empty($requestData["Country_ID"]) || empty($requestData["City_ID"]) ||
             empty($requestData["Admission_Criteria"]) || empty($requestData["Start_Admission_Date"]) ||
             empty($requestData["End_Admission_Date"]) || empty($requestData["Total_ETM"]) ||
             empty($requestData["S_Education_MC_PCT"]) || empty($requestData["H_Education_MC_PCT"]) ||
-            empty($requestData["PCT_MC_ETM"]) ||
             !isset($requestData["Phone"]) || !isset($requestData["Web_Link"]) || !isset($requestData["Email"]) ||
             empty($requestData["Address"])
         ) {
@@ -70,20 +70,8 @@
 
         validateProgramsParams($requestData["programs"]);
 
+        return $requestData["University_ID"];
 
-
-    }
-
-
-
-    /**
-     * Validates if university name is present in the incoming request.
-     */
-    function validateUniversityNameParam() {
-        if(empty($_POST["name"])) {
-            sendResponseStatus(400);
-            exit();
-        }
     }
 
     

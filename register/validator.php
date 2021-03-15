@@ -4,6 +4,9 @@
     include_once("../util/util.php");
     include_once("../util/response.php");
 
+    /**
+     * Validates, in the incoming request all the necessary data for new user is present.
+     */
     function validateRegisterParams() {
 
         if(
@@ -16,10 +19,11 @@
             sendResponseStatus(400);
             exit();
         }
-
     }
 
-
+    /**
+     * Validates if user name is present in the incoming request.
+     */
     function validateRegisterNameParams() {
         if(empty($_POST["name"])) {
             sendResponseStatus(400);
@@ -27,15 +31,14 @@
         }
     }
 
+    /**
+     * Validates if user email is present in the incoming request.
+     */
     function validateRegisterEmailParams() {
         if(empty($_POST["email"])) {
             sendResponseStatus(400);
             exit();
         }
     }
-
-
-    
-
 
 ?>

@@ -1,8 +1,9 @@
 <?php
-    
+
     include_once("header.php");
-    include_once("response.php");
     include_once("../DB/getData.php");
+    include_once("util.php");
+
 
 
     /**
@@ -24,10 +25,21 @@
         exit();
     }
 
+    /**
+     * check valid values i.e negative values
+     */
+    if($_GET['id'] < 1) {
+        sendResponseStatus(400);
+        echo "Invalid id range.";
+        exit();
+    }
 
     /**
-     * retrive the cities from the country id and print as json.
+     * retrive users from the database and print as json.
      */
-    echo \DATABASE_GET_DATA\getCities($_GET['id']);
+    echo \DATABASE_GET_DATA\getUniversityDetails($_GET['id']);
+
+    
+
 
 ?>

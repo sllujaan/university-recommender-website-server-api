@@ -1,0 +1,27 @@
+
+
+
+
+{
+	"session_id": "38126cd58d2eeb0314fe5f86e3bd912c",
+	"user_id": 1,
+	"Name": "punjab university5",
+	"Description": "punjab university",
+	"Country_ID": 100,
+	"City_ID": 10,
+	"Admission_Criteria": "punjab university",
+	"Start_Admission_Date": "0000-00-00",
+	"End_Admission_Date": "0000-00-00",
+	"Total_ETM": 500,
+	"S_Education_MC_PCT": 1,
+	"H_Education_MC_PCT": 1,
+	"PCT_MC_ETM": 1, 
+	"Phone": "0000",
+	"Web_Link": "punjab university",
+	"Email": "punjab university",
+	"Address": "punjab university",
+	"programs": [
+		{"Program_ID": 2, "Description": "saaaaaaaaaaa", "Fee_Total": 500, "Fee_Description": "fee description", "MM_PCT": 1, "MM_PN": "CS1"}
+		]
+	
+}
