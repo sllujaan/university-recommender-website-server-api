@@ -5,11 +5,16 @@
     include_once("../util/response.php");
     include_once("../util/validator.php");
     include_once("../DB/getData.php");
+    include_once("util.php");
 
+
+    \UTIL\validatePageNumberURL();
+
+    $limit = \UTIL\generateLimitFromPageNumber($_GET['page']);
 
     /*make sure that the incoming request is a post request*/
     \UTIL_VALIDATOR\validatePostRequest();
 
-    echo \DATABASE_GET_DATA\getRecommendedUniversities($_POST['id']);
+    echo \DATABASE_GET_DATA\getRecommendedUniversities($_POST['id'], $limit);
 
 ?>

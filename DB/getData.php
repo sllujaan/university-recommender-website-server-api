@@ -566,7 +566,7 @@
 
 
 
-    function getRecommendedUniversities($UserID) {
+    function getRecommendedUniversities($UserID, $limit) {
         //create new connection
         $conn = initConnection();
         
@@ -586,6 +586,7 @@
                 and university_program.Fee_Total <= (select (Budget_US_$) from User where User_ID = {$UserID})
                 
             group by university.University_ID
+            {$limit}
             ;
         ";
 
