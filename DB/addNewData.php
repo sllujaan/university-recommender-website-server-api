@@ -572,7 +572,11 @@
             handleStatementExecutionTrans($stmt);
         }
         catch(\Exception $e) {
-            handleException($e);
+            if($e->getMessage() === "handleStatementExecutionTrans::400") {
+                sendResponseStatus(409);
+                exit();
+            }
+            else {handleException($e);}
         }
 
         //close the connection

@@ -10,7 +10,18 @@
         if(
             empty($_POST["Name"]) || !isset($_POST["Country_ID"]) ||
             !isset($_POST["City_ID"]) || !isset($_POST["Program_ID"]) ||
-            !isset($_POST["budget_US_$"]) || !isset($_POST["MM_PCT"])
+            !isset($_POST["Budget_US_$"]) || !isset($_POST["MM_PCT"])
+        ) {
+            sendResponseStatus(400);
+            exit();
+        }
+    }
+
+    function validateCreateSearchParams_BODY($search) {
+        if(
+            empty($search["Name"]) || !isset($search["Country_ID"]) ||
+            !isset($search["City_ID"]) || !isset($search["Program_ID"]) ||
+            !isset($search["Budget_US_$"]) || !isset($search["MM_PCT"])
         ) {
             sendResponseStatus(400);
             exit();
@@ -19,6 +30,11 @@
 
     function validateSearchParams() {
         validateCreateSearchParams();
+    }
+
+    function validateSearchParams_BODY() {
+        $requestData = \UTIL\getRequestData();
+        validateCreateSearchParams_BODY($requestData);
     }
 
     
