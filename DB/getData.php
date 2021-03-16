@@ -294,7 +294,7 @@
         return $regex;
     }
 
-    function handlePrepareStatement($conn, $regex) {
+    function handlePrepareStatement($conn, $regex, $limit) {
         //check empty values
         $defaultID_regex = "\\b\d*\\b";
         $countryID_regex = $defaultID_regex;
@@ -334,26 +334,31 @@
         $constraints = $countryID_SQL . $cityID_SQL;
 
         $stmt = $conn->prepare(
-            "select * from university
-            inner join university_program
-            on university.University_ID = university_program.University_ID
-            
-            where (
-            university.Name regexp ?
-            or
-            university.Description regexp ?
-            )
+            "select university.University_ID, university.Name,
+             university.Description, Country.Name as CountryName
+             from university
+                inner join university_program
+                on university.University_ID = university_program.University_ID
+                inner join Country
+                on university.Country_ID = Country.Country_ID
+                        
+                    where (
+                    university.Name regexp ?
+                    or
+                    university.Description regexp ?
+                    )
 
-            and university.Country_ID regexp ?
-            and university.Country_ID regexp ?
-            and university_program.Program_ID regexp ?
-            and university.Start_Admission_Date <= (? + interval 1 month)
-            and university.End_Admission_Date >= ?
-            and university_program.Fee_Total <= ?
-            and university_program.MM_PCT <= ?
+                    and university.Country_ID regexp ?
+                    and university.Country_ID regexp ?
+                    and university_program.Program_ID regexp ?
+                    and university.Start_Admission_Date <= (? + interval 1 month)
+                    and university.End_Admission_Date >= ?
+                    and university_program.Fee_Total <= ?
+                    and university_program.MM_PCT <= ?
 
-            group by university.University_ID
-            ;"
+                    group by university.University_ID
+                    {$limit}
+                    ;"
         );
 
         //query error
@@ -398,15 +403,10 @@
     /**
      * performs university search
     */
-    function performUniversitySerach() {
+    function performUniversitySerach($limit) {
         $searchNameArr = explode(" ", trim($_POST["Name"]));
 
         $regex =  prepareRegularExpression($searchNameArr);
-
-        print_r($searchNameArr);
-        echo $regex;
-
-        echo "<br><br>";
 
         //create new connection
         $conn = initConnection();
@@ -414,7 +414,7 @@
 
 
 
-        echo handlePrepareStatement($conn, $regex);
+        echo handlePrepareStatement($conn, $regex, $limit);
 
         //close the connection
         $conn->close();
