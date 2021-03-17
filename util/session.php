@@ -78,7 +78,7 @@
     //data in coming through post request
     function validateSession_POST() {
         if(empty($_POST["session_id"]) || empty($_POST["user_id"])) {
-            sendResponseStatus(505);
+            sendResponseStatus(401);
             exit();
         }
         validateSession($_POST["session_id"], $_POST["user_id"]);
