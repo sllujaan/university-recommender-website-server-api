@@ -8,9 +8,10 @@
 
     function validateCreateSearchParams() {
         if(
-            empty($_POST["Name"]) || !isset($_POST["Country_ID"]) ||
+            !isset($_POST["Name"]) || !isset($_POST["Country_ID"]) ||
             !isset($_POST["City_ID"]) || !isset($_POST["Program_ID"]) ||
-            !isset($_POST["Budget_US_$"]) || !isset($_POST["MM_PCT"])
+            !isset($_POST["Budget_US_$"]) || !isset($_POST["MM_PCT"]) ||
+            !isset($_POST["Start_Admission_Date"])
         ) {
             sendResponseStatus(400);
             exit();
@@ -19,7 +20,7 @@
 
     function validateCreateSearchParams_BODY($search) {
         if(
-            empty($search["Name"]) || !isset($search["Country_ID"]) ||
+            !isset($search["Name"]) || !isset($search["Country_ID"]) ||
             !isset($search["City_ID"]) || !isset($search["Program_ID"]) ||
             !isset($search["Budget_US_$"]) || !isset($search["MM_PCT"])
         ) {
