@@ -620,10 +620,18 @@
             $Universities[] = $row;
         }
 
+        //collection array
+        $collectionArr[] = array(
+            "Total_Universities" => (int)$result->num_rows,
+            "Page_Number" => (int)$_GET['page']
+        );
+
+        $collectionArr[] = $Universities;
+
         //close the connection
         $conn->close();
 
-        return json_encode($Universities);
+        return json_encode($collectionArr);
     }
 
 
