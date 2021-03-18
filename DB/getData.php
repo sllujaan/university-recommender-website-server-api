@@ -323,8 +323,8 @@
             $End_Admission_Date = $Start_Admission_Date;
         }
 
-        if(!empty($_POST["budget_US_$"])) {
-            $Budget = $_POST["budget_US_$"];
+        if(!empty($_POST["Budget_US_$"])) {
+            $Budget = $_POST["Budget_US_$"];
         }
 
         if(!empty($_POST["MM_PCT"])){
@@ -349,7 +349,7 @@
                     )
 
                     and university.Country_ID regexp ?
-                    and university.Country_ID regexp ?
+                    and university.City_ID regexp ?
                     and university_program.Program_ID regexp ?
                     and university.Start_Admission_Date <= (? + interval 1 month)
                     and university.End_Admission_Date >= ?
