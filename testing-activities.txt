@@ -8,9 +8,9 @@ No.     Name					               Front-End (Status)            Back-End (Status)
 
 3       Login:                                 OK                            OK
 
-4       Request(approve/reject):               -                             -
+4       Request(approve/reject):               OK                            OK
 
-5       Search:                                -                             -
+5       Search:                                OK                            OK
 
 6       Create Search:                         -                             -
 
