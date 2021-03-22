@@ -1,9 +1,17 @@
-No.     Name					    Front-End (Status)            Back-End (Status)
+No.     Name					               Front-End (Status)            Back-End (Status)
 
-1       Add University:             OK                            OK
+1       Add University:                        OK                            OK
 
-2       Update University:          -                            -
+2       Update University:                     OK                            OK
 
-3       Register:                   -                           -
+3       Register:                              OK                            OK
 
+3       Login:                                 OK                            OK
 
+4       Request(approve/reject):               -                             -
+
+5       Search:                                -                             -
+
+6       Create Search:                         -                             -
+
+7       Merit Calculator:                      -                             -
