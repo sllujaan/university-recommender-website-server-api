@@ -12,6 +12,6 @@ No.     Name					               Front-End (Status)            Back-End (Status)
 
 5       Search:                                OK                            OK
 
-6       Create Search:                         -                             -
+6       Create Search:                         OK                            OK
 
 7       Merit Calculator:(Search/recomm)       OK                            OK
