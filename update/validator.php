@@ -27,7 +27,7 @@
                 !isset($program["Enrollment_Fee_Per_Semester"]) || !isset($program["Tuition_Fee_per_Credit_Hour"]) ||
                 !isset($program["Convocation_Fee"]) ||
                 
-                empty($program["Fee_Description"]) || empty($program["MM_PCT"]) ||
+                empty($program["Fee_Description"]) || !isset($program["MM_PCT"]) ||
                 empty($program["MM_PN"])
             ) {
                 echo "<br>Invalid data Programs<br>";
@@ -52,8 +52,8 @@
             empty($requestData["Name"]) || empty($requestData["Description"]) ||
             empty($requestData["Country_ID"]) || empty($requestData["City_ID"]) ||
             empty($requestData["Admission_Criteria"]) || empty($requestData["Start_Admission_Date"]) ||
-            empty($requestData["End_Admission_Date"]) || empty($requestData["Total_ETM"]) ||
-            empty($requestData["S_Education_MC_PCT"]) || empty($requestData["H_Education_MC_PCT"]) ||
+            empty($requestData["End_Admission_Date"]) || !isset($requestData["Total_ETM"]) ||
+            !isset($requestData["S_Education_MC_PCT"]) || !isset($requestData["H_Education_MC_PCT"]) ||
             !isset($requestData["Phone"]) || !isset($requestData["Web_Link"]) || !isset($requestData["Email"]) ||
             empty($requestData["Address"])
         ) {

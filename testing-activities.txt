@@ -1,0 +1,9 @@
+No.     Name					    Front-End (Status)            Back-End (Status)
+
+1       Add University:             OK                            OK
+
+2       Update University:          -                            -
+
+3       Register:                   -                           -
+
+
