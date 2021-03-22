@@ -591,7 +591,7 @@
             on
                 university.Country_ID = (select (Country_ID) from User where User_ID = {$UserID})
                 and university_program.Program_ID = (select (Program_ID) from User where User_ID = {$UserID})
-                and university_program.Fee_Total <= (select (Budget_US_$) from User where User_ID = {$UserID})
+                and university_program.Fee_Total <= ((select (Budget_US_$) from User where User_ID = {$UserID}) + 1000)
                 
             group by university.University_ID
             {$limit}
