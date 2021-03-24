@@ -294,6 +294,34 @@
         return $regex;
     }
 
+    function getTotalUniversities($conn) {
+        
+        //sql query to retrieve users
+        $sql = "select count(University_ID) as Total_Universities from university;";
+        $result = $conn->query($sql);
+
+        //check if there is any error in query
+        if(!$result) {
+            sendResponseStatus(500);
+            echo "Failed to tetrieve the total universities: " . $conn->error;
+            exit();
+        }
+
+
+        //no row found
+        if($result->num_rows === 0) {
+            sendResponseStatus(404);
+            exit();
+        }
+
+
+        $row = $result->fetch_assoc();
+
+        return $row["Total_Universities"];
+
+        
+    }
+
     function handlePrepareStatement($conn, $regex, $limit) {
         //check empty values
         $defaultID_regex = "\\b\d*\\b";
@@ -395,9 +423,12 @@
             $Universities[] = $row;
         }
 
+        //retrieve total Universites.
+        $TotalUniversities = \DATABASE_GET_DATA\getTotalUniversities($conn);
+
         //collection array
         $collectionArr[] = array(
-            "Total_Universities" => (int)$result->num_rows,
+            "Total_Universities" => (int)$TotalUniversities,
             "Page_Number" => (int)$_GET['page']
         );
 
