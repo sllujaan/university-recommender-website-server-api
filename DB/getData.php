@@ -294,34 +294,6 @@
         return $regex;
     }
 
-    function getTotalUniversities($conn) {
-        
-        //sql query to retrieve users
-        $sql = "select count(University_ID) as Total_Universities from university;";
-        $result = $conn->query($sql);
-
-        //check if there is any error in query
-        if(!$result) {
-            sendResponseStatus(500);
-            echo "Failed to tetrieve the total universities: " . $conn->error;
-            exit();
-        }
-
-
-        //no row found
-        if($result->num_rows === 0) {
-            sendResponseStatus(404);
-            exit();
-        }
-
-
-        $row = $result->fetch_assoc();
-
-        return $row["Total_Universities"];
-
-        
-    }
-
     function handlePrepareStatement($conn, $regex, $limit) {
         //check empty values
         $defaultID_regex = "\\b\d*\\b";
@@ -359,12 +331,11 @@
             $MM_PCT = $_POST["MM_PCT"];
         }
 
-        $constraints = $countryID_SQL . $cityID_SQL;
-
-        $stmt = $conn->prepare(
-            "select university.University_ID, university.Name,
-             university.Description, Country.Name as CountryName
-             from university
+        //$constraints = $countryID_SQL . $cityID_SQL;
+        $sqlStmt = "
+                select university.University_ID, university.Name,
+                university.Description, Country.Name as CountryName
+                from university
                 inner join university_program
                 on university.University_ID = university_program.University_ID
                 inner join Country
@@ -384,10 +355,9 @@
                     and university_program.Fee_Total <= ?
                     and university_program.MM_PCT <= ?
 
-                    group by university.University_ID
-                    {$limit}
-                    ;"
-        );
+                    group by university.University_ID";
+
+        $stmt = $conn->prepare("{$sqlStmt} {$limit};");
 
         //query error
         if(!$stmt) {
@@ -423,8 +393,21 @@
             $Universities[] = $row;
         }
 
-        //retrieve total Universites.
-        $TotalUniversities = \DATABASE_GET_DATA\getTotalUniversities($conn);
+        //retrieve total Universites.-------
+        $stmt = $conn->prepare("{$sqlStmt};");
+        $stmt->bind_param(
+            "sssssssid", $regex, $regex, $countryID_regex, $cityID_regex,
+            $programID_regex, $Start_Admission_Date, $End_Admission_Date, $Budget,
+            $MM_PCT
+        );
+        if(!$stmt->execute()) {
+            sendResponseStatus(500);    //internal server error.
+            echo "Failed to execute the statment: " . $stmt->error;
+            exit();
+        }
+        $result = $stmt->get_result();
+        $TotalUniversities = $result->num_rows;
+        //-----------------------------------
 
         //collection array
         $collectionArr[] = array(
